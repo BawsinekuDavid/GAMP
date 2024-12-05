@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:standard_searchbar/new/standard_search_anchor.dart';
-import 'package:standard_searchbar/new/standard_search_bar.dart';
-import 'package:standard_searchbar/new/standard_suggestion.dart';
-import 'package:standard_searchbar/new/standard_suggestions.dart';
 
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -52,17 +48,49 @@ class SearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 200,
-      height: 100,
-      child: TextField(
+       child: TextField(
         decoration: InputDecoration(
-          fillColor: bgColor,
-          focusColor: colors,
-          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-           hintText: hintText,
-           prefixIcon: icon
-        ),
+            fillColor: bgColor,
+            focusColor: colors,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            hintText: hintText,
+            prefixIcon: icon),
       ),
     );
+  }
+}
+
+// ignore: must_be_immutable
+class MySearchBtn extends StatelessWidget {
+  final String lab;
+  Color? colorState;
+  Color? textColorState;
+  Function()? onPressed;
+
+  MySearchBtn(
+      {super.key,
+      required this.lab,
+      required this.colorState,
+      required this.onPressed,
+      required this.textColorState});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          shadowColor: colors,
+          backgroundColor: colorState ?? colors,
+        ),
+        onPressed: onPressed,
+        child: Text(
+          lab,
+          style: TextStyle(
+            color: textColorState ?? colors,
+            fontSize: 16,
+          ),
+        ));
   }
 }

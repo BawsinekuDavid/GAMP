@@ -8,21 +8,58 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: FittedBox(
-          child: Text("Find Fresh Produce",
-          style: TextStyle(fontSize: 20),),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Find Fresh Produce",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(width: 10),
+                    SearchField(
+                      icon: const Icon(Icons.location_on,
+                      color:Colors.green,),
+                      hintText: "Location",
+                      bgColor: Colors.white,
+                      
+                    ),
+                  ],
+                ),
+
+                // Add a SizedBox for spacing
+                const SizedBox(height: 20),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SearchField(
+                        icon: const Icon(Icons.search, color: Colors.green,),
+                        hintText: "Search",
+                        bgColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    MySearchBtn(
+                      lab: "Search",
+                      colorState: colors,
+                      onPressed: () {},
+                      textColorState: Colors.white,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
-        
-        actions: [
-          SearchField(icon: Icon(Icons.location_on, color: colors,), hintText: "loaction", bgColor: Colors.green)
-        ],
-
       ),
-
-      body: SearchField(icon: Icon(Icons.search, color: colors,), hintText: "search", bgColor: Colors.grey.shade300),
-       
     );
   }
 }
