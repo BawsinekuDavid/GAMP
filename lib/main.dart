@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gmarket_app/pages/home/home_page.dart';
+import 'package:gmarket_app/components/bottom_nav_bar.dart';
 import 'package:gmarket_app/pages/login_page.dart';
 import 'package:gmarket_app/pages/otp/otp_reset.dart';
 import 'package:gmarket_app/pages/otp/success_otp.dart';
@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
         '/otpreset': (context) => const OtpReset(),
         '/verification': (context) => const Verification(),
         '/successotp': (context) => const SuccessOtp(),
-        '/home':(context) => const HomePage(),
-      },
+        '/home':(context) => const BottomNavBar(),
+        },
     
     );
   }

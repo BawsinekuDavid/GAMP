@@ -56,7 +56,7 @@ class DynamicBtn extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         shadowColor: shadowColor2,
         backgroundColor: colorState2 ?? colors,
       ),
