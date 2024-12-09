@@ -48,15 +48,20 @@ class SearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 200,
-       child: TextField(
+      child: TextField(
         decoration: InputDecoration(
-            fillColor: bgColor,
-            focusColor: colors,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-            hintText: hintText,
-            prefixIcon: icon),
+          prefixIcon: icon,
+          fillColor: bgColor,
+          focusColor: colors,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          hintText: hintText,
+          suffix: Icon(
+            Icons.fitbit,
+            color: colors,
+          ),
+        ),
       ),
     );
   }
