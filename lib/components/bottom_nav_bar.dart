@@ -29,7 +29,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[currentIndex], // Show the selected screen
-      bottomNavigationBar: BottomNavigationBar(
+      
+      bottomNavigationBar:
+      
+       BottomNavigationBar(
+      
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index), // Update index
         selectedItemColor: Colors.green, // Active tab color

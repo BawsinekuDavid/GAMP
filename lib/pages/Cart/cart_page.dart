@@ -8,8 +8,13 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: colors,
-      body: Center(child: Text("CART")),
-    );
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: colors),
+        title: Text("Delivery and Payment", style: TextStyle(color: colors),),
+      ),
+        
+       );
+       
+    
   }
 }

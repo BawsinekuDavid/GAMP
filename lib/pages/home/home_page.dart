@@ -3,6 +3,7 @@ import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/components/display_constainer.dart';
 import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/constant.dart';
+import 'package:gmarket_app/pages/Orders/orders_page.dart';
 import 'package:gmarket_app/pages/categories/fruits_page.dart';
  import 'package:gmarket_app/pages/categories/meat_fish_page.dart';
 import 'package:gmarket_app/pages/categories/vegetables_page.dart';
@@ -137,7 +138,7 @@ class _HomePageState extends State<HomePage> {
             
                   const SizedBox(height: 20),
             
-                  const Column(
+                  Column(
                     children: [
                       Row(
                         children: [
@@ -145,22 +146,23 @@ class _HomePageState extends State<HomePage> {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
-                          DisplayContainer(
+                              names: "Mango", onPressed: ( ){Navigator.push(context, MaterialPageRoute(builder: (context)=> OrdersPage()));},),
+                          const SizedBox(width: 20),
+                          
+                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Banana"),
-                          SizedBox(width: 20),
-                          DisplayContainer(
+                              names: "Banana", onPressed: null,),
+                          const SizedBox(width: 20),
+                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           DisplayContainer(
@@ -168,23 +170,23 @@ class _HomePageState extends State<HomePage> {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
-                          DisplayContainer(
+                              names: "Mango", onPressed: null,),
+                          const SizedBox(width: 20),
+                            DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
-                          DisplayContainer(
+                              names: "Mango", onPressed: null,),
+                          const SizedBox(width: 20),
+                            DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      Row(
+                      const SizedBox(height: 20),
+                      const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -194,26 +196,26 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
-                          DisplayContainer(
+                              names: "Mango", onPressed: null,),
+                          const SizedBox(width: 20),
+                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
-                          DisplayContainer(
+                              names: "Mango", onPressed: null,),
+                          const SizedBox(width: 20),
+                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
                     ],

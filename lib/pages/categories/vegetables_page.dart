@@ -12,9 +12,10 @@ class VegetablesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:  AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: colors,
-        title: Text(
+        title: const Text(
           "Vegetables",
           style: TextStyle(color: Colors.white),
         ),
@@ -153,7 +154,7 @@ class VegetablesPage extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  const Column(
+                   Column(
                     children: [
                       Row(
                         children: [
@@ -161,19 +162,19 @@ class VegetablesPage extends StatelessWidget {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "CARROT"),
+                              names: "CARROT", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Banana"),
+                              names: "Banana", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
                       SizedBox(height: 20),
@@ -183,19 +184,19 @@ class VegetablesPage extends StatelessWidget {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
                       SizedBox(height: 20),
@@ -216,19 +217,19 @@ class VegetablesPage extends StatelessWidget {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
                     ],

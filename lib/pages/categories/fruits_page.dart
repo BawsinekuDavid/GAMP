@@ -13,6 +13,7 @@ class FruitsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: colors,
         title: Text("Fruits", style: TextStyle(color: Colors.white),),
         
@@ -136,7 +137,7 @@ class FruitsPage extends StatelessWidget {
             
                   const SizedBox(height: 20),
             
-                  const Column(
+                   Column(
                     children: [
                       Row(
                         children: [
@@ -144,19 +145,19 @@ class FruitsPage extends StatelessWidget {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "CASHEW"),
+                              names: "CASHEW", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Banana"),
+                              names: "Banana", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
                       SizedBox(height: 20),
@@ -167,19 +168,19 @@ class FruitsPage extends StatelessWidget {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
                       SizedBox(height: 20),
@@ -200,19 +201,19 @@ class FruitsPage extends StatelessWidget {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                           SizedBox(width: 20),
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango"),
+                              names: "Mango", onPressed: null,),
                         ],
                       ),
                     ],

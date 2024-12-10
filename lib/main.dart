@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         '/verification': (context) => const Verification(),
         '/successotp': (context) => const SuccessOtp(),
         '/home':(context) => const BottomNavBar(),
-        },
+         },
     
     );
   }

@@ -1,10 +1,10 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/components/display_constainer.dart';
 import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/pages/categories/fruits_page.dart';
- import 'package:gmarket_app/pages/categories/vegetables_page.dart';
+import 'package:gmarket_app/pages/categories/vegetables_page.dart';
 
 class MeatFishPage extends StatelessWidget {
   const MeatFishPage({super.key});
@@ -13,11 +13,14 @@ class MeatFishPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: colors,
-        title: Text("Meat & Fish", style: TextStyle(color: Colors.white),),
-        
+        title: const Text(
+          "Meat & Fish",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-           body: SafeArea(
+      body: SafeArea(
         child: ListView(
           children: [
             Padding(
@@ -42,10 +45,10 @@ class MeatFishPage extends StatelessWidget {
                       ),
                     ],
                   ),
-            
+
                   // Add a SizedBox for spacing
                   const SizedBox(height: 20),
-            
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,22 +72,22 @@ class MeatFishPage extends StatelessWidget {
                       ),
                     ],
                   ),
-            
+
                   const SizedBox(height: 20),
-            
+
                   const Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Categories",
-                        style:
-                            TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
-            
+
                   const SizedBox(height: 20),
-            
+
                   Row(
                     children: [
                       DynamicBtn(
@@ -92,7 +95,12 @@ class MeatFishPage extends StatelessWidget {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => FruitsPage()));},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const FruitsPage()));
+                        },
                       ),
                       const SizedBox(width: 20),
                       DynamicBtn(
@@ -100,7 +108,13 @@ class MeatFishPage extends StatelessWidget {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> VegetablesPage()));},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const VegetablesPage()));
+                        },
                       ),
                       const SizedBox(width: 20),
                       DynamicBtn(
@@ -108,20 +122,25 @@ class MeatFishPage extends StatelessWidget {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> MeatFishPage()));},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MeatFishPage()));
+                        },
                       ),
                     ],
                   ),
                   const SizedBox(height: 30),
-            
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         "Near You",
-                        style:
-                            TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         "See all",
@@ -133,57 +152,68 @@ class MeatFishPage extends StatelessWidget {
                       ),
                     ],
                   ),
-            
+
                   const SizedBox(height: 20),
-            
-                  const Column(
+
+                  Column(
                     children: [
                       Row(
                         children: [
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "monasdh"),
-                          SizedBox(width: 20),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "monasdh",
+                            onPressed: null,
+                          ),
+                          const SizedBox(width: 20),
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Banana"),
-                          SizedBox(width: 20),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Banana",
+                            onPressed: null,
+                          ),
+                          const SizedBox(width: 20),
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango"),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Mango",
+                            onPressed: null,
+                          ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           DisplayContainer(
-                            
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Mango",
+                            onPressed: null,
+                          ),
+                          const SizedBox(width: 20),
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Mango",
+                            onPressed: null,
+                          ),
+                          const SizedBox(width: 20),
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango"),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Mango",
+                            onPressed: null,
+                          ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      Row(
+                      const SizedBox(height: 20),
+                      const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -193,32 +223,38 @@ class MeatFishPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Mango",
+                            onPressed: null,
+                          ),
+                          const SizedBox(width: 20),
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango"),
-                          SizedBox(width: 20),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Mango",
+                            onPressed: null,
+                          ),
+                          const SizedBox(width: 20),
                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango"),
+                            imagePath: "lib/images/mangos.jpg",
+                            containerText: Colors.red,
+                            numberRate: 4.0,
+                            names: "Mango",
+                            onPressed: null,
+                          ),
                         ],
                       ),
                     ],
                   ),
-                 const SizedBox(height: 10),
-            
+                  const SizedBox(height: 10),
+
                   //bottom nav bar
                 ],
               ),
@@ -226,7 +262,6 @@ class MeatFishPage extends StatelessWidget {
           ],
         ),
       ),
-
     );
   }
 }
