@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/pages/Cart/cart_page.dart';
 import 'package:gmarket_app/pages/Products/product_page.dart';
 import 'package:gmarket_app/pages/Purchasing/purchase_page.dart';
 
@@ -15,7 +14,7 @@ class DisplayContainer extends StatelessWidget {
   final Function? onPressed;
 
   // Constructor
-  DisplayContainer(
+  const DisplayContainer(
       {super.key,
       required this.imagePath,
       required this.containerText,
@@ -41,7 +40,7 @@ class DisplayContainer extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProductPage()));
+                      MaterialPageRoute(builder: (context) => const ProductPage()));
                 },
                 child: Image.asset(
                   imagePath,
@@ -57,7 +56,7 @@ class DisplayContainer extends StatelessWidget {
             children: [
               Text(
                 names,
-                style: TextStyle(color: Colors.red, fontSize: 12),
+                style: const TextStyle(color: Colors.red, fontSize: 12),
               ),
               const SizedBox(width: 20),
 
@@ -97,7 +96,7 @@ class ProductConatiner extends StatelessWidget {
   final String imagePath;
   final Function()? onPressed;
 
-  ProductConatiner({
+  const ProductConatiner({
     super.key,
     required this.price,
     required this.labels,
@@ -125,7 +124,7 @@ class ProductConatiner extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> PurchasePage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const PurchasePage()));
               },
               child: Image.asset(
                 imagePath,
@@ -136,8 +135,8 @@ class ProductConatiner extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10), // Add spacing between image and text
-          Text('Price: \Ghc $price',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          Text('Price: Ghc $price',
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           Text('Labels: $labels'),
           Text('Weight: $weight'),
         ],

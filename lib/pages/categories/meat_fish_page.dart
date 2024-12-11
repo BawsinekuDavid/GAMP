@@ -13,7 +13,7 @@ class MeatFishPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: colors,
         title: const Text(
           "Meat & Fish",
@@ -155,7 +155,7 @@ class MeatFishPage extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  Column(
+                  const Column(
                     children: [
                       Row(
                         children: [
@@ -166,7 +166,7 @@ class MeatFishPage extends StatelessWidget {
                             names: "monasdh",
                             onPressed: null,
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                           DisplayContainer(
                             imagePath: "lib/images/mangos.jpg",
                             containerText: Colors.red,
@@ -174,7 +174,7 @@ class MeatFishPage extends StatelessWidget {
                             names: "Banana",
                             onPressed: null,
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                           DisplayContainer(
                             imagePath: "lib/images/mangos.jpg",
                             containerText: Colors.red,
@@ -184,7 +184,7 @@ class MeatFishPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20),
                       Row(
                         children: [
                           DisplayContainer(
@@ -194,7 +194,7 @@ class MeatFishPage extends StatelessWidget {
                             names: "Mango",
                             onPressed: null,
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                           DisplayContainer(
                             imagePath: "lib/images/mangos.jpg",
                             containerText: Colors.red,
@@ -202,7 +202,7 @@ class MeatFishPage extends StatelessWidget {
                             names: "Mango",
                             onPressed: null,
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                           DisplayContainer(
                             imagePath: "lib/images/mangos.jpg",
                             containerText: Colors.red,
@@ -212,8 +212,8 @@ class MeatFishPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      const Row(
+                      SizedBox(height: 20),
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -223,7 +223,7 @@ class MeatFishPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20),
                       Row(
                         children: [
                           DisplayContainer(
@@ -233,7 +233,7 @@ class MeatFishPage extends StatelessWidget {
                             names: "Mango",
                             onPressed: null,
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                           DisplayContainer(
                             imagePath: "lib/images/mangos.jpg",
                             containerText: Colors.red,
@@ -241,7 +241,7 @@ class MeatFishPage extends StatelessWidget {
                             names: "Mango",
                             onPressed: null,
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                           DisplayContainer(
                             imagePath: "lib/images/mangos.jpg",
                             containerText: Colors.red,

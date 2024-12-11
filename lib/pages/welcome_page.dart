@@ -36,6 +36,7 @@ class WelcomePage extends StatelessWidget {
                 borderType: BorderType.Circle,
                 radius: const Radius.circular(12),
                 padding: const EdgeInsets.all(50),
+                dashPattern: const [6, 3],
                 color: colors,
                 child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(12)),

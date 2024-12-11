@@ -9,7 +9,7 @@ class ProfilesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: colors,
-      body: Center(child: Text("PROFILES")),
+      body: const Center(child: Text("PROFILES")),
     );
   }
 }

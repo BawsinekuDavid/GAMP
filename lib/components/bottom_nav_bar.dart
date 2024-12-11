@@ -47,7 +47,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.flash_auto),
+            icon: Icon(Icons.flash_on),
             label: "Promotions",
           ),
           BottomNavigationBarItem(

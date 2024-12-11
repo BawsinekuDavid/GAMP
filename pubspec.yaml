@@ -38,6 +38,7 @@ dependencies:
   dotted_border: ^2.1.0
   standard_searchbar: ^2.1.1
   flutter_rating_bar: ^4.0.1
+  bulleted_list: ^0.0.1+0.1a
 
 dev_dependencies:
   flutter_test:

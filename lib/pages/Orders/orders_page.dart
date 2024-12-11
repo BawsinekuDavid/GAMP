@@ -9,7 +9,7 @@ class OrdersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: colors,
-      body: Center(child: Text("ORDERS")),
+      body: const Center(child: Text("ORDERS")),
     );
   }
 }

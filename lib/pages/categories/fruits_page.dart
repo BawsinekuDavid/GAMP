@@ -13,9 +13,9 @@ class FruitsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: colors,
-        title: Text("Fruits", style: TextStyle(color: Colors.white),),
+        title: const Text("Fruits", style: TextStyle(color: Colors.white),),
         
       ),
            body: SafeArea(
@@ -93,7 +93,7 @@ class FruitsPage extends StatelessWidget {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => FruitsPage()));},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const FruitsPage()));},
                       ),
                       const SizedBox(width: 20),
                       DynamicBtn(
@@ -101,7 +101,7 @@ class FruitsPage extends StatelessWidget {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> VegetablesPage()));},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const VegetablesPage()));},
                       ),
                       const SizedBox(width: 20),
                       DynamicBtn(
@@ -109,7 +109,7 @@ class FruitsPage extends StatelessWidget {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> MeatFishPage()));},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const MeatFishPage()));},
                       ),
                     ],
                   ),
@@ -137,7 +137,7 @@ class FruitsPage extends StatelessWidget {
             
                   const SizedBox(height: 20),
             
-                   Column(
+                   const Column(
                     children: [
                       Row(
                         children: [

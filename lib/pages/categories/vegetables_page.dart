@@ -13,7 +13,7 @@ class VegetablesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:  AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: colors,
         title: const Text(
           "Vegetables",
@@ -99,7 +99,7 @@ class VegetablesPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FruitsPage()));
+                                  builder: (context) => const FruitsPage()));
                         },
                       ),
                       const SizedBox(width: 20),
@@ -112,7 +112,7 @@ class VegetablesPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => VegetablesPage()));
+                                  builder: (context) => const VegetablesPage()));
                         },
                       ),
                       const SizedBox(width: 20),
@@ -125,7 +125,7 @@ class VegetablesPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MeatFishPage()));
+                                  builder: (context) => const MeatFishPage()));
                         },
                       ),
                     ],
@@ -154,7 +154,7 @@ class VegetablesPage extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                   Column(
+                   const Column(
                     children: [
                       Row(
                         children: [

@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => FruitsPage()));},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const FruitsPage()));},
                       ),
                       const SizedBox(width: 20),
                       DynamicBtn(
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> VegetablesPage()));},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const VegetablesPage()));},
                       ),
                       const SizedBox(width: 20),
                       DynamicBtn(
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                         shadowColor2: Colors.grey,
                         textColorState2: Colors.white70,
                         colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> MeatFishPage()));},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const MeatFishPage()));},
                       ),
                     ],
                   ),
@@ -146,16 +146,16 @@ class _HomePageState extends State<HomePage> {
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
-                              names: "Mango", onPressed: ( ){Navigator.push(context, MaterialPageRoute(builder: (context)=> OrdersPage()));},),
+                              names: "Mango", onPressed: ( ){Navigator.push(context, MaterialPageRoute(builder: (context)=> const OrdersPage()));},),
                           const SizedBox(width: 20),
                           
-                           DisplayContainer(
+                           const DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
                               names: "Banana", onPressed: null,),
                           const SizedBox(width: 20),
-                           DisplayContainer(
+                           const DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      Row(
+                      const Row(
                         children: [
                           DisplayContainer(
                             
@@ -171,13 +171,13 @@ class _HomePageState extends State<HomePage> {
                               containerText: Colors.red,
                               numberRate: 4.0,
                               names: "Mango", onPressed: null,),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                             DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
                               names: "Mango", onPressed: null,),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                             DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
@@ -197,20 +197,20 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      Row(
+                      const Row(
                         children: [
                           DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
                               names: "Mango", onPressed: null,),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                            DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,
                               numberRate: 4.0,
                               names: "Mango", onPressed: null,),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20),
                            DisplayContainer(
                               imagePath: "lib/images/mangos.jpg",
                               containerText: Colors.red,

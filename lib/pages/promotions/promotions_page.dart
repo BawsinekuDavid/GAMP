@@ -9,7 +9,7 @@ class PromotionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: colors,
-      body: Text("Promotions"),
+      body: const Text("Promotions"),
     );
   }
 }

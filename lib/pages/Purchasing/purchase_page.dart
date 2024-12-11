@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/app_btn.dart';
-import 'package:gmarket_app/components/display_constainer.dart';
 import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/pages/Cart/cart_page.dart';
 
@@ -28,7 +27,7 @@ class PurchasePage extends StatelessWidget {
               height: 250,
             ),
             const SizedBox(height: 50), // Add spacing between image and text
-            const Text('Price: \Ghc 36',
+            const Text('Price: Ghc 36',
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const Text('Labels: tomato', style: TextStyle(fontSize: 16, ),),
              const SizedBox(height: 10),
@@ -56,7 +55,7 @@ class PurchasePage extends StatelessWidget {
                 lbl: "Add To Cart",
                 colorState: colors,
                 textColorState: Colors.white,
-                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>CartPage()));})
+                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>const CartPage()));})
           ],
         ),
       ),
