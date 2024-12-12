@@ -22,7 +22,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget> screens = [
     const HomePage(),
     const CartPage(),
-    const OrdersPage(),
+     OrdersPage(),
     const ProfilesPage(),
   ];
 
