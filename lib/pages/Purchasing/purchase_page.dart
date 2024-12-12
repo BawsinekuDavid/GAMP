@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/pages/Cart/cart_page.dart';
+import 'package:gmarket_app/pages/Cart/empty_cart.dart';
 
 class PurchasePage extends StatelessWidget {
   const PurchasePage({super.key});
@@ -55,7 +55,7 @@ class PurchasePage extends StatelessWidget {
                 lbl: "Add To Cart",
                 colorState: colors,
                 textColorState: Colors.white,
-                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>const CartPage()));})
+                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>const EmptyCart()));})
           ],
         ),
       ),

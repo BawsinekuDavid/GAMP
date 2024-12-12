@@ -50,7 +50,7 @@ class OtpReset extends StatelessWidget {
                 MyTextField(
                     controller: numberController,
                     hintText: "Enter phone Number",
-                    obsecureText: false),
+                    obsecureText: false,),
                 const SizedBox(height: 30),
                 AppBtn(
                     lbl: "Continue",

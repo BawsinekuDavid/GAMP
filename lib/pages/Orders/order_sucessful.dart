@@ -2,7 +2,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/pages/Cart/empty_cart_page.dart';
 import 'package:gmarket_app/pages/Orders/track_order_page.dart';
 
 class OrderSucessful extends StatelessWidget {
@@ -48,7 +47,7 @@ class OrderSucessful extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 30)
+              const SizedBox(height: 30)
             ],
           ),
         ),
@@ -101,7 +100,7 @@ class OrderSucessful extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EmptyCartPage()));
+                            builder: (context) => const TrackOrderPage()));
                   },
                   textColorState: Colors.white,
                   colorState: colors,

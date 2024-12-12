@@ -8,7 +8,7 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
@@ -16,7 +16,7 @@ class SplashPage extends StatelessWidget {
             ClipPath(
               clipper: BezierClipper(),
               child: Container(
-                color:  colors,
+                color: colors,
                 height: 400,
               ),
             ),
@@ -25,75 +25,67 @@ class SplashPage extends StatelessWidget {
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-
-              Padding(
+          
+               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
-                child: Expanded(
-                  child: Text(
-                     "From fresh produce to everyday essentials, we're here to deliver the best to your door!",
-                    // style: TextStyle(fontSize: 18.0,
-                    // fontWeight: FontWeight.normal,
-                    // color: bg),
-                    style: kTitle(context),
-
-                  ),
+                child: Text(
+                  "From fresh produce to everyday essentials, we're here to deliver the best to your door!",
+                  // style: TextStyle(fontSize: 18.0,
+                  // fontWeight: FontWeight.normal,
+                  // color: bg),
+                  style: kTitle(context),
                 ),
               ),
             
-             
             const SizedBox(height: 60),
-
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 140),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    color:  colors,
-                    borderRadius: BorderRadius.circular(100)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 140),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        color: colors,
+                        borderRadius: BorderRadius.circular(100)),
                   ),
-                  
-                ),
-                Container(
-                  width:15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(100)
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(100)),
                   ),
-                  
-                ),
-
-_buldContianer()
-              ],
-            ),),
+                  _buldContianer()
+                ],
+              ),
+            ),
             const SizedBox(height: 60),
-
-             AppBtn(lbl: 'Get Started', onPressed: () {
-              Navigator.pushNamed(context, '/welcome');
-             },textColorState: Colors.white, colorState: colors, )
-              
-           ],
+            AppBtn(
+              lbl: 'Get Started',
+              onPressed: () {
+                Navigator.pushNamed(context, '/welcome');
+              },
+              textColorState: Colors.white,
+              colorState: colors,
+            )
+          ],
         ),
       ),
     );
   }
 
-Widget _buldContianer(){
-  return                 Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(100)
-                  ),
-                  
-                );
-}
-
+  Widget _buldContianer() {
+    return Container(
+      width: 15,
+      height: 15,
+      decoration: BoxDecoration(
+          color: Colors.grey.shade400,
+          borderRadius: BorderRadius.circular(100)),
+    );
+  }
 }
 
 class BezierClipper extends CustomClipper<Path> {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
+import 'package:gmarket_app/constant.dart';
+import 'package:gmarket_app/pages/Cart/cart_page.dart';
+
  
-import '../pages/Cart/cart_page.dart';
 import '../pages/Orders/orders_page.dart';
 import '../pages/Profiles/profiles_page.dart';
 import '../pages/home/home_page.dart';
-import '../pages/promotions/promotions_page.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -19,7 +21,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   // Define screens as a list of widgets
   final List<Widget> screens = [
     const HomePage(),
-    const PromotionsPage(),
     const CartPage(),
     const OrdersPage(),
     const ProfilesPage(),
@@ -29,26 +30,19 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[currentIndex], // Show the selected screen
-      
-      bottomNavigationBar:
-      
-       BottomNavigationBar(
-      
+
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index), // Update index
         selectedItemColor: Colors.green, // Active tab color
         unselectedItemColor: Colors.grey, // Inactive tab color
         type: BottomNavigationBarType.fixed,
-         // Fixed style
+        // Fixed style
         items: const [
-          
           BottomNavigationBarItem(
+            
             icon: Icon(Icons.home),
             label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.flash_on),
-            label: "Promotions",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),

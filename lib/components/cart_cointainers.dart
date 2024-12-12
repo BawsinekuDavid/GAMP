@@ -3,21 +3,23 @@ import 'package:gmarket_app/constant.dart';
 
 class CartCointainers extends StatelessWidget {
   final String name;
-  final Icon;
+  // ignore: prefer_typing_uninitialized_variables
+  final icon;
   final String subname;
+  // ignore: prefer_typing_uninitialized_variables
   final tailIcon;
 
   const CartCointainers(
       {super.key,
       required this.name,
-      this.Icon,
+      this.icon,
       required this.subname,
       this.tailIcon});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon,
+      leading: icon,
       title: Text(name),
       subtitle: Text(subname),
       subtitleTextStyle: TextStyle(color: Colors.grey[600]),

@@ -33,7 +33,7 @@ class Verification extends StatelessWidget {
               MyTextField(
                   controller: codeController,
                   hintText: "Enter code",
-                  obsecureText: true),
+                  obsecureText: true,),
               const SizedBox(height: 20),
               AppBtn(
                   lbl: "Confirm",
