@@ -8,6 +8,7 @@ class CartCointainers extends StatelessWidget {
   final String subname;
   // ignore: prefer_typing_uninitialized_variables
   final tailIcon;
+  
 
   const CartCointainers(
       {super.key,

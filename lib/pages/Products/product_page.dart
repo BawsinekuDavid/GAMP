@@ -113,18 +113,7 @@ class ProductPage extends StatelessWidget {
                     weight: "50kg",
                     imagePath: "lib/images/mangos.jpg",
                   ),
-                  ProductConatiner(
-                    price: "2.0",
-                    labels: "cow",
-                    weight: "50kg",
-                    imagePath: "lib/images/mangos.jpg",
-                  ),
-                  ProductConatiner(
-                    price: "2.0",
-                    labels: "cow",
-                    weight: "50kg",
-                    imagePath: "lib/images/mangos.jpg",
-                  ),
+ 
                 ],
               ),
             ),

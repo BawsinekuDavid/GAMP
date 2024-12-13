@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/pages/Cart/empty_cart.dart';
+import 'package:gmarket_app/pages/Cart/delivery_payment.dart';
 
-class PurchasePage extends StatelessWidget {
+class PurchasePage extends StatefulWidget {
   const PurchasePage({super.key});
+
+  @override
+  State<PurchasePage> createState() => _PurchasePageState();
+}
+
+class _PurchasePageState extends State<PurchasePage> {
+  int _itemCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +44,20 @@ class PurchasePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.do_disturb_on,
-                  color: colors,
+                
+                
+                IconButton(
+                icon: Icon(Icons.remove_circle),
+                  color: colors, onPressed: () { setState(() {
+                    _itemCount --;
+                  });},
                 ),
                  const SizedBox(width: 20),
-                Text("1",style: TextStyle(color: colors), ),
+                Text(_itemCount.toString(),style: TextStyle(color: colors), ),
                  const SizedBox(width: 20),
-                Icon(Icons.add_circle, color: colors,),
+                 IconButton(onPressed: (){setState(() {
+                   _itemCount ++;
+                 });}, icon: Icon(Icons.add_circle, color: colors,))
               ],
             ),
 
@@ -55,7 +68,7 @@ class PurchasePage extends StatelessWidget {
                 lbl: "Add To Cart",
                 colorState: colors,
                 textColorState: Colors.white,
-                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>const EmptyCart()));})
+                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>const DeliveryPayment()));})
           ],
         ),
       ),

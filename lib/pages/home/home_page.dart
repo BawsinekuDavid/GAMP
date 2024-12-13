@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gmarket_app/components/app_btn.dart';
-import 'package:gmarket_app/components/display_constainer.dart';
 import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/pages/Orders/orders_page.dart';
-import 'package:gmarket_app/pages/categories/fruits_page.dart';
- import 'package:gmarket_app/pages/categories/meat_fish_page.dart';
-import 'package:gmarket_app/pages/categories/vegetables_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,219 +10,121 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          toolbarHeight: 200,
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Find Fresh Produce",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      const SizedBox(width: 10),
-                      SearchField(
-                        icon: const Icon(
-                          Icons.location_on,
-                          color: Colors.green,
-                        ),
-                        hintText: "Location",
-                        bgColor: Colors.white,
-                      ),
-                    ],
+                  const Text(
+                    "Find Fresh Produce",
+                    style: TextStyle(fontSize: 20),
                   ),
-            
-                  // Add a SizedBox for spacing
-                  const SizedBox(height: 20),
-            
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: SearchField(
-                          icon: const Icon(
-                            Icons.search,
-                            color: Colors.green,
-                          ),
-                          hintText: "Search",
-                          bgColor: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      MySearchBtn(
-                        lab: "Search",
-                        colorState: colors,
-                        onPressed: () {},
-                        textColorState: Colors.white,
-                      ),
-                    ],
+                  SearchField(
+                    icon: const Icon(
+                      Icons.location_on,
+                      color: Colors.green,
+                    ),
+                    hintText: "Location",
+                    bgColor: Colors.white,
                   ),
-            
-                  const SizedBox(height: 20),
-            
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Categories",
-                        style:
-                            TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-            
-                  const SizedBox(height: 20),
-            
-                  Row(
-                    children: [
-                      DynamicBtn(
-                        label2: "Fruits",
-                        shadowColor2: Colors.grey,
-                        textColorState2: Colors.white70,
-                        colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const FruitsPage()));},
-                      ),
-                      const SizedBox(width: 20),
-                      DynamicBtn(
-                        label2: "Vegatbles",
-                        shadowColor2: Colors.grey,
-                        textColorState2: Colors.white70,
-                        colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const VegetablesPage()));},
-                      ),
-                      const SizedBox(width: 20),
-                      DynamicBtn(
-                        label2: "Meat & Fish",
-                        shadowColor2: Colors.grey,
-                        textColorState2: Colors.white70,
-                        colorState2: colors,
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const MeatFishPage()));},
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-            
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Near You",
-                        style:
-                            TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "See all",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: colors,
-                        ),
-                      ),
-                    ],
-                  ),
-            
-                  const SizedBox(height: 20),
-            
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: ( ){Navigator.push(context, MaterialPageRoute(builder: (context)=>  OrdersPage()));},),
-                          const SizedBox(width: 20),
-                          
-                           const DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Banana", onPressed: null,),
-                          const SizedBox(width: 20),
-                           const DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: null,),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      const Row(
-                        children: [
-                          DisplayContainer(
-                            
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: null,),
-                          SizedBox(width: 20),
-                            DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: null,),
-                          SizedBox(width: 20),
-                            DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: null,),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      const Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "All Vendors",
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      const Row(
-                        children: [
-                          DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: null,),
-                          SizedBox(width: 20),
-                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: null,),
-                          SizedBox(width: 20),
-                           DisplayContainer(
-                              imagePath: "lib/images/mangos.jpg",
-                              containerText: Colors.red,
-                              numberRate: 4.0,
-                              names: "Mango", onPressed: null,),
-                        ],
-                      ),
-                    ],
-                  ),
-                 const SizedBox(height: 10),
-            
-                  //bottom nav bar
                 ],
               ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SearchField(
+                    icon: const Icon(
+                      Icons.search,
+                      color: Colors.green,
+                    ),
+                    hintText: "Search",
+                    bgColor: Colors.white,
+                  ),
+                  MySearchBtn(
+                    lab: "Search",
+                    colorState: colors,
+                    onPressed: () {},
+                    textColorState: Colors.white,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Categories",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+            ],
+          ),
+          bottom: TabBar(
+            labelColor: Colors.white,
+            labelStyle: const TextStyle(
+              color: Colors.black,
             ),
+            indicator: BoxDecoration(
+                color: colors,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10)),
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorColor: colors,
+            tabs: const [
+              Tab(
+                child: Text("Fruits")),
+              Tab(
+                child: Text("Vegatable"),
+              ),
+              Tab(
+                child: Text("Meat & Fish"),
+              )
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, crossAxisSpacing: 10,),
+                    
+                    itemCount: 15,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.all(8),
+                    child:  Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color:  colors
+                      ),
+                    )
+                  );
+                }),
+            const Text("Vegetables"),
+            const Text("Meat and Fish")
           ],
         ),
       ),
     );
+
+    //bottom nav bar
   }
 }

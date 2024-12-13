@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/app_btn.dart';
+import 'package:gmarket_app/components/bottom_nav_bar.dart';
 import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/pages/Purchasing/purchase_page.dart';
-import 'package:gmarket_app/pages/home/home_page.dart';
-
+ 
 class CartPage extends StatelessWidget {
   final Function()? onPressed;
   // ignore: prefer_typing_uninitialized_variables
@@ -23,7 +23,7 @@ class CartPage extends StatelessWidget {
               IconButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const HomePage()));
+                        MaterialPageRoute(builder: (context) => const BottomNavBar()));
                   },
                   icon: const Icon(Icons.cancel_outlined, ), iconSize: 50,color: colors,)
             ]),
