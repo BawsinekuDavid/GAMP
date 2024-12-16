@@ -9,7 +9,8 @@ import '../pages/Profiles/profiles_page.dart';
 import '../pages/home/home_page.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+  final String category;
+  const BottomNavBar({super.key, required this.category});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -18,13 +19,22 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int currentIndex = 0;
 
+  
+
   // Define screens as a list of widgets
-  final List<Widget> screens = [
-    const HomePage(),
-    const CartPage(),
-     OrdersPage(),
-    const ProfilesPage(),
-  ];
+ late final List<Widget> screens;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize screens with the category from widget
+    screens = [
+      const HomePage(), // Use widget.category here
+      const CartPage(),
+      OrdersPage(),
+      const ProfilesPage(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -23,7 +23,7 @@ class CartPage extends StatelessWidget {
               IconButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const BottomNavBar()));
+                        MaterialPageRoute(builder: (context) => const BottomNavBar(category: 'fruits',)));
                   },
                   icon: const Icon(Icons.cancel_outlined, ), iconSize: 50,color: colors,)
             ]),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/bottom_nav_bar.dart';
+import 'package:gmarket_app/db/db_helper.dart';
 import 'package:gmarket_app/pages/login_page.dart';
 import 'package:gmarket_app/pages/otp/otp_reset.dart';
 import 'package:gmarket_app/pages/otp/success_otp.dart';
@@ -8,7 +9,9 @@ import 'package:gmarket_app/pages/sign_up_page.dart';
 import 'package:gmarket_app/pages/splash_page.dart';
 import 'package:gmarket_app/pages/welcome_page.dart';
 
-void main() {
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+  await populateDatabase();
   runApp(const MyApp());
 }
 
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
         '/otpreset': (context) => const OtpReset(),
         '/verification': (context) => const Verification(),
         '/successotp': (context) => const SuccessOtp(),
-        '/home':(context) => const BottomNavBar(),
+        '/home':(context) => const BottomNavBar(category: 'fruits',),
          },
     
     );

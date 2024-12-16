@@ -47,7 +47,7 @@ class _PurchasePageState extends State<PurchasePage> {
                 
                 
                 IconButton(
-                icon: Icon(Icons.remove_circle),
+                icon: const Icon(Icons.remove_circle),
                   color: colors, onPressed: () { setState(() {
                     _itemCount --;
                   });},

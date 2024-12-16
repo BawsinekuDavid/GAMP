@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/pages/Products/product_page.dart';
 import 'package:gmarket_app/pages/Purchasing/purchase_page.dart';
 
 // ignore: must_be_immutable
@@ -39,8 +38,7 @@ class DisplayContainer extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const ProductPage()));
+                   
                 },
                 child: Image.asset(
                   imagePath,
