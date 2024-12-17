@@ -20,7 +20,7 @@ class DbHelper {
     final path = join(dbPath, 'products.db');
     return openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
     );
   }
@@ -28,10 +28,11 @@ class DbHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
     CREATE TABLE products (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT, --Auto-generate ID
     name TEXT,
     image TEXT,
     rating REAL,
+    price REAL,
     category TEXT
     )
 ''');
@@ -58,48 +59,15 @@ Future<void> populateDatabase() async {
   final dbHelper = DbHelper();
 
   final products = [
-    Product(
-        id: 1,
-        name: 'Mango',
-        image: 'lib/images/mangos.jpg',
-        rating: 4.5,
-        category: 'Fruits'),
-    Product(
-        id: 2,
-        name: 'Apple',
-        image: 'lib/images/apples.jpg',
-        rating: 4.7,
-        category: 'Fruits'),
-    Product(
-        id: 3,
-        name: 'Tomato',
-        image: 'lib/images/tomato.png',
-        rating: 4.2,
-        category: 'Vegetables'),
-    Product(
-        id: 4,
-        name: 'Carrot',
-        image: 'lib/images/carrots.jpg',
-        rating: 4.4,
-        category: 'Vegetables'),
-    Product(
-        id: 5,
-        name: 'Chicken',
-        image: 'lib/images/chicken.jpg',
-        rating: 4.8,
-        category: 'Meat & Fish'),
-    Product(
-        id: 6,
-        name: 'Fish',
-        image: 'lib/images/fish.jpg',
-        rating: 4.6,
-        category: 'Meat & Fish'),
-    Product(
-        id: 7,
-        image: 'lib/images/clapping.png',
-        name: 'clapping',
-        category: "Fruits",
-        rating: 2.1)
+    Product(name: 'Mangos', image: 'lib/images/mangos.jpg', rating: 4.5, category: 'Fruits', price: 2.0),
+    Product(name: 'Apple', image: 'lib/images/apples.jpg', rating: 4.7, category: 'Fruits', price: 8.0),
+    Product(name: 'Banana', image: 'lib/images/banana.jpg', rating: 2.1, category: 'Fruits', price: 20.0),
+    Product(name: 'Pawpaw', image: 'lib/images/pawpaw.jpg', rating: 2.1, category: 'Fruits', price: 15.0),
+    Product(name: 'Citrus', image: 'lib/images/citrus.jpg', rating: 2.5, category: 'Fruits', price: 22.0),
+    Product(name: 'Tomato', image: 'lib/images/tomato.png', rating: 4.2, category: 'Vegetables', price: 12.0),
+    Product(name: 'Carrot', image: 'lib/images/carrots.jpg', rating: 4.4, category: 'Vegetables', price: 28.0),
+    Product(name: 'Chicken', image: 'lib/images/chicken.jpg', rating: 4.8, category: 'Meat & Fish', price: 94.0),
+    Product(name: 'Fish', image: 'lib/images/fish.jpg', rating: 4.6, category: 'Meat & Fish', price: 234.0),
   ];
 
   for (var product in products) {

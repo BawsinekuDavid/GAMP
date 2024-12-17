@@ -103,7 +103,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: const Padding(
-
           padding: EdgeInsets.all(8.0),
           child: TabBarView(
             children: [
@@ -138,38 +137,50 @@ class ProductGrid extends StatelessWidget {
         }
         final products = snapshot.data!;
         return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, crossAxisSpacing: 10),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailsPage(product: product,)));
-                },
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        product.image,
-                        width: 120,
-                        height: 100,
-                        fit: BoxFit.cover,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3, crossAxisSpacing: 10),
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductDetailsPage(
+                              product: product,
+                            )));
+              },
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      product.image,
+                      width: 120,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        product.name,
+                        style: const TextStyle(color: Colors.red),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(product.name, style: const TextStyle(color: Colors.red),),
-                         Text('Rating: ${product.rating}', style: TextStyle(color: colors),),
-                      ],
-                    ),
-                   ],
-                ),
-              );
-            });
+                      Text(
+                        '${product.rating}',
+                        style: TextStyle(color: colors),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }

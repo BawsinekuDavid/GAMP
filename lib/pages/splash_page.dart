@@ -66,7 +66,7 @@ class SplashPage extends StatelessWidget {
             AppBtn(
               lbl: 'Get Started',
               onPressed: () {
-                Navigator.pushNamed(context, '/welcome');
+                Navigator.pushNamed(context, '/home');
               },
               textColorState: Colors.white,
               colorState: colors,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/bottom_nav_bar.dart';
 import 'package:gmarket_app/db/db_helper.dart';
+import 'package:gmarket_app/models/cart_provider.dart';
 import 'package:gmarket_app/pages/login_page.dart';
 import 'package:gmarket_app/pages/otp/otp_reset.dart';
 import 'package:gmarket_app/pages/otp/success_otp.dart';
@@ -8,11 +9,14 @@ import 'package:gmarket_app/pages/otp/verification.dart';
 import 'package:gmarket_app/pages/sign_up_page.dart';
 import 'package:gmarket_app/pages/splash_page.dart';
 import 'package:gmarket_app/pages/welcome_page.dart';
+ import 'package:provider/provider.dart';
 
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await populateDatabase();
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (Context) => CartProvider(),
+      child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-       initialRoute: '/',
+      initialRoute: '/',
       routes: {
         '/': (context) => const SplashPage(),
         '/welcome': (context) => const WelcomePage(),
@@ -32,9 +36,10 @@ class MyApp extends StatelessWidget {
         '/otpreset': (context) => const OtpReset(),
         '/verification': (context) => const Verification(),
         '/successotp': (context) => const SuccessOtp(),
-        '/home':(context) => const BottomNavBar(category: 'fruits',),
-         },
-    
+        '/home': (context) => const BottomNavBar(
+              category: 'fruits',
+            ),
+      },
     );
   }
-  }
+}

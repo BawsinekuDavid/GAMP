@@ -8,8 +8,8 @@ plugins {
 android {
     namespace = "com.example.gmarket_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
- 
+    ndkVersion = "25.1.8937393" // Explicitly set the required NDK version
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
