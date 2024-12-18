@@ -1,59 +1,7 @@
-// import 'package:flutter/material.dart';
-// import 'package:gmarket_app/components/app_btn.dart';
-// import 'package:gmarket_app/components/bottom_nav_bar.dart';
-// import 'package:gmarket_app/constant.dart';
-// import 'package:gmarket_app/pages/Purchasing/purchase_page.dart';
- 
-// class CartPage extends StatelessWidget {
-//   final Function()? onPressed;
-//   // ignore: prefer_typing_uninitialized_variables
-//   final  icon;
-//   const CartPage({super.key, this.onPressed, this.icon});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Padding(
-//         padding: const EdgeInsets.all(25.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-//               IconButton(
-//                   onPressed: () {
-//                     Navigator.push(context,
-//                         MaterialPageRoute(builder: (context) => const BottomNavBar(category: 'fruits',)));
-//                   },
-//                   icon: const Icon(Icons.cancel_outlined, ), iconSize: 50,color: colors,)
-//             ]
-// ),
-//             const SizedBox(height: 100),
-//             Image.asset("lib/images/emptycart.png"),
-//             const SizedBox(height: 35),
-//             const Text(
-//               "You do not have anything in your cart",
-//               style: TextStyle(fontSize: 16, color: Colors.grey),
-//               textAlign: TextAlign.center,
-//             ),
-//             const SizedBox(height: 35),
-//             AppBtn(
-//                 lbl: "Add An Item",
-//                 colorState: colors,
-//                 textColorState: Colors.white,
-//                 onPressed: () {
-//                   Navigator.push(context,
-//                       MaterialPageRoute(builder: (context) => const PurchasePage()));
-//                 })
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
+import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/pages/Products/product_page.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../models/cart_provider.dart';
 
@@ -65,9 +13,11 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  var cartBox = Hive.box<Product>('cartbox');
+
   // Function to remove item from the cart
-  void removeFromCart(Product product, BuildContext context) {
-    final cartProvider = context.read<CartProvider>();
+  void removeFromCart(Product product) {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
     cartProvider.removeFromCart(product);
   }
 
@@ -76,8 +26,15 @@ class _CartPageState extends State<CartPage> {
     final cartProvider = Provider.of<CartProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Cart Page")),
-      body: cartProvider.product.isEmpty
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          "Cart Page",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: colors,
+      ),
+      body: cartProvider.products.isEmpty
           ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -96,31 +53,96 @@ class _CartPageState extends State<CartPage> {
                       color: Colors.grey,
                     ),
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
             )
-          : ListView.builder(
-              itemCount: cartProvider.product.length,
-              itemBuilder: (context, index) {
-                final item = cartProvider.product[index];
-                return Container(
-                  margin: EdgeInsets.only(left: 20, right: 20, bottom: 5, top: 20),
-                
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey.shade300
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: cartProvider.products.length,
+                    itemBuilder: (context, index) {
+                      final item = cartProvider.products[index];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.shade300,
+                        ),
+                        child: ListTile(
+                          leading:
+                              Image.asset(item.image, width: 50, height: 50),
+                          title: Text(item.name),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Quantity: ${item.quantity}"),
+                              Text(
+                                  "Price: GHC ${item.price.toStringAsFixed(2)}"),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            onPressed: () => removeFromCart(item),
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  child: ListTile(
-                    leading: Image.asset(item.image, width: 50, height: 50),
-                    title: Text(item.name),
-                    subtitle: Text("Quantity: ${item.quantity}"),
-                    trailing: IconButton(
-                      onPressed: () => removeFromCart(item, context),
-                      icon: const Icon(Icons.delete, color: Colors.red),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: colors,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Total Price:",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              "GHC ${cartProvider.calculateTotal()}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Handle checkout logic here
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: colors,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text("Checkout"),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
+                ),
+              ],
             ),
     );
   }

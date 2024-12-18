@@ -12,6 +12,6 @@ class Product {
     required this.image,
     required this.name,
     required this.category,
-    required this.rating,
+    required this.rating, required int quantity, required double price,
   });
 }

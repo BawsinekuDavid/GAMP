@@ -55,7 +55,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               clipBehavior: Clip.none,
               children: [
                 const Icon(Icons.shopping_bag),
-                if (cartProvider.product.isNotEmpty)
+                if (cartProvider.products.isNotEmpty)
                   Positioned(
                     right: -6,
                     top: -6,
@@ -70,7 +70,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         minHeight: 16,
                       ),
                       child: Text(
-                        cartProvider.product.length.toString(), // Cart count
+                        cartProvider.products.length.toString(), // Cart count
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,

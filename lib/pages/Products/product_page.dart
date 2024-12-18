@@ -1,11 +1,27 @@
+import 'package:hive_flutter/adapters.dart';
+
+part 'product_page.g.dart';
+
+@HiveType(typeId: 0)
 class Product {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String image;
+
+  @HiveField(2)
   final String name;
+
+  @HiveField(3)
   final String category;
+  
+  @HiveField(4)
   final double price;
+
+  @HiveField(5)
   int quantity;
 
+  @HiveField(6)
   double rating;
 
   Product({
@@ -25,7 +41,7 @@ class Product {
       'name': name,
       'category': category,
       'rating': rating,
-      'price':price,
+      'price': price,
     };
   }
 
@@ -39,5 +55,5 @@ class Product {
         price: map['price']);
   }
 
-  void removeFromCart(Product product) {}
+  // void removeFromCart(Product product) {}
 }
