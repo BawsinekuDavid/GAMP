@@ -122,59 +122,81 @@ class _HomePageState extends State<HomePage> {
 class ProductGrid extends StatelessWidget {
   final String category;
   const ProductGrid({super.key, required this.category});
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Product>>(
       future: DbHelper().getProductsByCategory(category),
       builder: (context, snapshot) {
+        // Debug print to see what's being returned
+        print('Snapshot data: ${snapshot.data}');
+        print('Snapshot error: ${snapshot.error}');
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text("Error loading products"));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text("No Products found"));
         }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Text("Error: ${snapshot.error.toString()}"),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("No Products found"),
+              ElevatedButton(
+                onPressed: () async {
+                  await populateDatabase();
+                  //setState(() {}); // Refresh the widget
+                },
+                child: const Text("Reload Data"),
+              ),
+            ],
+          );
+        }
+
         final products = snapshot.data!;
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, crossAxisSpacing: 10),
+            crossAxisCount: 3,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.7,
+          ),
           itemCount: products.length,
           itemBuilder: (context, index) {
             final product = products[index];
             return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProductDetailsPage(
-                              product: product,
-                            )));
-              },
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsPage(product: product),
+                ),
+              ),
               child: Column(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      product.image,
-                      width: 120,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
+                  Container(
+                    width: 120,
+                    height: 100,
+                    color: Colors.grey[200],
+                    // ignore: unnecessary_null_comparison
+                    child: product.image != null
+                        ? Image.asset(
+                            product.image,
+                            fit: BoxFit.cover,
+                          )
+                        : const Icon(Icons.image_not_supported),
                   ),
                   const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        product.name,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                      Text(
-                        '${product.rating}',
-                        style: TextStyle(color: colors),
-                      ),
-                    ],
+                  Text(
+                    product.name,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  Text(
+                    '${product.rating}',
+                    style: TextStyle(color: colors),
                   ),
                 ],
               ),

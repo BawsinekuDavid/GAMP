@@ -2,36 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:gmarket_app/pages/Products/product_page.dart';
 class CartProvider extends ChangeNotifier {
-  late Box<Product> _cartBox;
-  List<Product> products = [];
+  late final Box<Product> _cartBox;
+  List<Product> _products = [];
+  bool _isInitialized = false;
+  bool _isInitializing = false;
 
+  List<Product> get products => _products;
+  bool get isReady => _isInitialized;
 
-  CartProvider() {
-    initializeCart();
+ Future<void> _ensureInitialized() async {
+  if (_isInitialized) return;
+  if (_isInitializing) {
+    await Future.doWhile(() => !_isInitialized);
+ 
+
+    return;
   }
-  Future<void> initializeCart() async {
-    // Access the already opened box
-    _cartBox = Hive.box<Product>('cartbox');
 
-    // Load products from the box if needed
-    products = _cartBox.values.toList();
+  _isInitializing = true;
+  try {
+    
+    // Just get the box, don't try to open it
+    _cartBox = Hive.box('cartbox');
+    _products = _cartBox.values.toList();
+    _isInitialized = true;
+    notifyListeners();
+  } catch (e) {
+    debugPrint('Error initializing cart box: $e');
+    _isInitializing = false;
+    rethrow;
+  }
+}
+
+  Future<void> addToCart(Product product) async {
+    await _ensureInitialized();
+    
+    await _cartBox.add(product);
+    _products = _cartBox.values.toList();
     notifyListeners();
   }
 
-  void addToCart(Product product) {
-    _cartBox.add(product);
-    products.add(product);
+  Future<void> removeFromCart(Product product) async {
+    await _ensureInitialized();
+    
+    await product.delete();
+    _products = _cartBox.values.toList();
     notifyListeners();
   }
 
-  void removeFromCart(Product product) {
-    _cartBox.delete(product.id);
-    products.remove(product);
+  Future<void> clearCart() async {
+    await _ensureInitialized();
+    
+    await _cartBox.clear();
+    _products = [];
     notifyListeners();
   }
 
   double calculateTotal() {
-    return products.fold(0.0, (total, product) => total + product.price);
+    return _products.fold(0.0, (total, product) => total + (product.price * product.quantity));
   }
 }
-

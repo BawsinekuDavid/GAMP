@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/pages/Products/product_page.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../models/cart_provider.dart';
 
@@ -13,7 +12,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  var cartBox = Hive.box<Product>('cartbox');
+ 
 
   // Function to remove item from the cart
   void removeFromCart(Product product) {

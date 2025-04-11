@@ -11,6 +11,7 @@ import 'package:gmarket_app/pages/welcome_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
+import 'db/db_helper.dart';
 import 'pages/Products/product_adapter.dart';
 
 void main() async {
@@ -18,9 +19,16 @@ void main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(ProductAdapter());
-
-  // Open the box here before the app starts
-  await Hive.openBox<Product>('cartbox');
+    await Hive.openBox<Product>('cartbox');
+ // Initialize database
+  final dbHelper = DbHelper();
+  await dbHelper.database; // Ensure database is initialized
+  
+  // Check if database is empty before populating
+  final existingProducts = await dbHelper.getAllProducts();
+  if (existingProducts.isEmpty) {
+    await populateDatabase();
+  }
 
   runApp(
     MultiProvider(

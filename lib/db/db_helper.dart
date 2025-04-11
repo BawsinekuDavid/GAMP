@@ -43,17 +43,26 @@ class DbHelper {
     await db.insert('products', product.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
-
-  Future<List<Product>> getProductsByCategory(String category) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'products',
-      where: 'category = ?',
-      whereArgs: [category],
-    );
-    return List.generate(maps.length, (i) => Product.fromMap(maps[i]));
-  }
+Future<List<Product>> getProductsByCategory(String category) async {
+  final db = await database;
+  final List<Map<String, dynamic>> maps = await db.query(
+    'products',
+    where: 'LOWER(category) = ?',
+    whereArgs: [category.toLowerCase()],
+  );
+  print('Found ${maps.length} products for category: $category');
+  return List.generate(maps.length, (i) => Product.fromMap(maps[i]));
 }
+
+
+  
+Future<List<Product>> getAllProducts() async {
+  final db = await database;
+  final List<Map<String, dynamic>> maps = await db.query('products');
+  return List.generate(maps.length, (i) => Product.fromMap(maps[i]));
+}
+}
+
 
 Future<void> populateDatabase() async {
   final dbHelper = DbHelper();

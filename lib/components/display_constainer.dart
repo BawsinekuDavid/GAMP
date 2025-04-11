@@ -19,7 +19,7 @@ class DisplayContainer extends StatelessWidget {
       required this.containerText,
       required this.numberRate,
       required this.names,
-      required this.onPressed});
+      required this.onPressed, required double price});
 
   @override
   Widget build(BuildContext context) {

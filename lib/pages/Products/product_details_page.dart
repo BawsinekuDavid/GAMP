@@ -23,10 +23,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        
         backgroundColor: colors,
         clipBehavior: Clip.none,
-         content: const Text("Successfully added to cart", style: TextStyle(color: Colors.white, fontSize: 16),textAlign: TextAlign.center,),
+        content: const Text(
+          "Successfully added to cart",
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
         actions: [
           IconButton(
               onPressed: () {
@@ -34,7 +37,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
                 Navigator.pop(context);
               },
-              icon: const Icon(Icons.done, color: Colors.white,))
+              icon: const Icon(
+                Icons.done,
+                color: Colors.white,
+              ))
         ],
       ),
     );
@@ -118,7 +124,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   //   style: const TextStyle(fontSize: 25),
                   // ),
 
-                  Text("Ghc: ${widget.product.price}",style: const TextStyle(fontSize: 25),),
+                  Text(
+                    "Ghc: ${widget.product.price}",
+                    style: const TextStyle(fontSize: 25),
+                  ),
                   Text(
                     'Rating: ${widget.product.rating}',
                     style: TextStyle(
@@ -127,7 +136,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  
                 ],
               ),
               Row(
@@ -170,21 +178,37 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 lbl: "Add To Cart",
                 colorState: colors,
                 textColorState: Colors.white,
-                onPressed: () {
-                  final cartProvider =
-                      Provider.of<CartProvider>(context, listen: false);
-                  cartProvider.addToCart(
-                    Product(
-                      image: widget.product.image,
-                      name: widget.product.name,
-                      category: widget.product.category,
-                      rating: widget.product.rating,
-                      quantity: _itemCount > 0 ? _itemCount : 1,
-                      price: widget.product.price,
-                    ),
-                  );
+                onPressed: () async {
+                  if (_itemCount == 0) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Please select at least one item')),
+                    );
+                    return;
+                  }
 
-                  _showSuccessDialog(context);
+                  try {
+                    final cartProvider =
+                        Provider.of<CartProvider>(context, listen: false);
+                    await cartProvider.addToCart(
+                      Product(
+                        image: widget.product.image,
+                        name: widget.product.name,
+                        category: widget.product.category,
+                        rating: widget.product.rating,
+                        quantity: _itemCount,
+                        price: widget.product.price,
+                      ),
+                    );
+                    _showSuccessDialog(context);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                     const SnackBar(
+                          content:
+                              Text('Failed to add to cart. Please try again.')),
+                    );
+                    debugPrint('Error adding to cart: $e');
+                  }
                 },
               ),
             ],

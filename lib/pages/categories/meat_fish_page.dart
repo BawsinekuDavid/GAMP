@@ -6,6 +6,10 @@ import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/pages/categories/fruits_page.dart';
 import 'package:gmarket_app/pages/categories/vegetables_page.dart';
 
+import '../../db/db_helper.dart';
+import '../Products/product_page.dart';
+ 
+
 class MeatFishPage extends StatelessWidget {
   const MeatFishPage({super.key});
 
@@ -19,51 +23,57 @@ class MeatFishPage extends StatelessWidget {
           "Meat & Fish",
           style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
       ),
       body: SafeArea(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
+        child: FutureBuilder<List<Product>>(
+          future: DbHelper().getProductsByCategory('Meat & Fish'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            final products = snapshot.data ?? [];
+            
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Search and Location Row
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Text(
                         "Find Fresh Produce",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 10),
-                      SearchField(
-                        icon: const Icon(
-                          Icons.location_on,
-                          color: Colors.green,
-                        ),
-                        hintText: "Location",
-                        bgColor: Colors.white,
-                      ),
-                    ],
-                  ),
-
-                  // Add a SizedBox for spacing
-                  const SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
                       Expanded(
                         child: SearchField(
-                          icon: const Icon(
-                            Icons.search,
-                            color: Colors.green,
-                          ),
-                          hintText: "Search",
+                          icon: const Icon(Icons.location_on, color: Colors.green),
+                          hintText: "Location",
                           bgColor: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 20),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Search Bar Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SearchField(
+                          icon: const Icon(Icons.search, color: Colors.green),
+                          hintText: "Search meat & fish...",
+                          bgColor: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
                       MySearchBtn(
                         lab: "Search",
                         colorState: colors,
@@ -72,194 +82,120 @@ class MeatFishPage extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
 
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Categories",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  // Categories Section
+                  const Text(
+                    "Categories",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-
-                  const SizedBox(height: 20),
-
-                  Row(
-                    children: [
-                      DynamicBtn(
-                        label2: "Fruits",
-                        shadowColor2: Colors.grey,
-                        textColorState2: Colors.white70,
-                        colorState2: colors,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const FruitsPage()));
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      DynamicBtn(
-                        label2: "Vegatbles",
-                        shadowColor2: Colors.grey,
-                        textColorState2: Colors.white70,
-                        colorState2: colors,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const VegetablesPage()));
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      DynamicBtn(
-                        label2: "Meat & Fish",
-                        shadowColor2: Colors.grey,
-                        textColorState2: Colors.white70,
-                        colorState2: colors,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MeatFishPage()));
-                        },
-                      ),
-                    ],
+                  const SizedBox(height: 10),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        DynamicBtn(
+                          label2: "Fruits",
+                          shadowColor2: Colors.grey,
+                          textColorState2: Colors.white,
+                          colorState2: colors,
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const FruitsPage()),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        DynamicBtn(
+                          label2: "Vegetables",
+                          shadowColor2: Colors.grey,
+                          textColorState2: Colors.white,
+                          colorState2: colors,
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const VegetablesPage()),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        DynamicBtn(
+                          label2: "Meat & Fish",
+                          shadowColor2: Colors.grey,
+                          textColorState2: Colors.white,
+                          colorState2: colors,
+                          onPressed: () {}, // Current page, no navigation needed
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 25),
 
+                  // Products Near You Section
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         "Near You",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        "See all",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: colors,
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "See all",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: colors,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  const Column(
-                    children: [
-                      Row(
-                        children: [
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "monasdh",
-                            onPressed: null,
-                          ),
-                          SizedBox(width: 20),
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Banana",
-                            onPressed: null,
-                          ),
-                          SizedBox(width: 20),
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Mango",
-                            onPressed: null,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Mango",
-                            onPressed: null,
-                          ),
-                          SizedBox(width: 20),
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Mango",
-                            onPressed: null,
-                          ),
-                          SizedBox(width: 20),
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Mango",
-                            onPressed: null,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "All Vendors",
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Mango",
-                            onPressed: null,
-                          ),
-                          SizedBox(width: 20),
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Mango",
-                            onPressed: null,
-                          ),
-                          SizedBox(width: 20),
-                          DisplayContainer(
-                            imagePath: "lib/images/mangos.jpg",
-                            containerText: Colors.red,
-                            numberRate: 4.0,
-                            names: "Mango",
-                            onPressed: null,
-                          ),
-                        ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
 
-                  //bottom nav bar
+                  // Products Grid
+                  products.isEmpty
+                      ? const Center(
+                          child: Text(
+                            "No meat & fish products available",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        )
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.8,
+                            crossAxisSpacing: 15,
+                            mainAxisSpacing: 15,
+                          ),
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return DisplayContainer(
+                              imagePath: product.image,
+                              containerText: Colors.red,
+                              numberRate: product.rating,
+                              names: product.name,
+                              price: product.price,
+                              onPressed: () {
+                                // Navigate to product details
+                              },
+                            );
+                          },
+                        ),
+
+                  // All Vendors Section
+                  const SizedBox(height: 25),
+                  const Text(
+                    "All Vendors",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 15),
+                  // Add your vendors list here
                 ],
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

@@ -55,5 +55,7 @@ class Product {
         price: map['price']);
   }
 
+  delete() {}
+
   // void removeFromCart(Product product) {}
 }
