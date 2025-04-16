@@ -8,18 +8,16 @@ import 'package:gmarket_app/pages/otp/verification.dart';
 import 'package:gmarket_app/pages/sign_up_page.dart';
 import 'package:gmarket_app/pages/splash_page.dart';
 import 'package:gmarket_app/pages/welcome_page.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'db/db_helper.dart';
-import 'pages/Products/product_adapter.dart';
+import 'db/hiveService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Hive.initFlutter();
-  Hive.registerAdapter(ProductAdapter());
-    await Hive.openBox<Product>('cartbox');
+  await HiveService.initHive();
+  
  // Initialize database
   final dbHelper = DbHelper();
   await dbHelper.database; // Ensure database is initialized
