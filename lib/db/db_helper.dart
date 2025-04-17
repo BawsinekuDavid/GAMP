@@ -7,6 +7,9 @@ class DbHelper {
   factory DbHelper() => _instance;
   DbHelper._internal();
 
+  static const String _dbName = 'products.db';
+  static const int _dbVersion = 2;
+
   Database? _database;
 
   Future<Database> get database async {
@@ -17,26 +20,31 @@ class DbHelper {
 
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'products.db');
-    return openDatabase(
+    final path = join(dbPath, _dbName);
+    return await openDatabase(
       path,
-      version: 2,
-      onCreate: _onCreate,
+      version: _dbVersion,
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image TEXT,
+            name TEXT,
+            category TEXT,
+            rating REAL,
+            price REAL,
+            quantity INTEGER DEFAULT 0
+          )
+        ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('ALTER TABLE products ADD COLUMN quantity INTEGER DEFAULT 0');
+        }
+      },
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-    CREATE TABLE products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, --Auto-generate ID
-    name TEXT,
-    image TEXT,
-    rating REAL,
-    price REAL,
-    category TEXT
-    )
-''');
-  }
 
   Future<void> insertProduct(Product product) async {
     final db = await database;

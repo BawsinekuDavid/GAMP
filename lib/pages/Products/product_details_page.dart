@@ -196,18 +196,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         name: widget.product.name,
                         category: widget.product.category,
                         rating: widget.product.rating,
-                        quantity: _itemCount,
                         price: widget.product.price,
+                        quantity: _itemCount,
                       ),
                     );
                     _showSuccessDialog(context);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                     const SnackBar(
-                          content:
-                              Text('Failed to add to cart. Please try again.')),
+                      SnackBar(content: Text('Failed to add to cart: $e')),
                     );
-                    debugPrint('Error adding to cart: $e');
                   }
                 },
               ),

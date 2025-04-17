@@ -17,7 +17,7 @@ class _CartPageState extends State<CartPage> {
   // Function to remove item from the cart
   void removeFromCart(Product product) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    cartProvider.removeFromCart(product);
+    cartProvider.removeFromCart(product as int);
   }
 
   @override
@@ -113,7 +113,7 @@ class _CartPageState extends State<CartPage> {
                               ),
                             ),
                             Text(
-                              "GHC ${cartProvider.calculateTotal()}",
+                              "GHC ${cartProvider.totalPrice}",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
