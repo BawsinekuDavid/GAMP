@@ -16,7 +16,9 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-  int _itemCount = 0;
+  int _itemCount = 1;
+   // ignore: unused_field
+   bool _isAddingToCart = false;
 
   void _showSuccessDialog(BuildContext context) {
     showDialog(
@@ -174,40 +176,57 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               const SizedBox(
                 height: 50,
               ),
-              AppBtn(
-                lbl: "Add To Cart",
-                colorState: colors,
-                textColorState: Colors.white,
-                onPressed: () async {
-                  if (_itemCount == 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Please select at least one item')),
-                    );
-                    return;
-                  }
+               AppBtn(
+              lbl: "Add To Cart",
+              colorState: colors,
+              textColorState: Colors.white,
+             
+              onPressed: () async {
+                if (_itemCount == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please select at least one item'),
+                    ),
+                  );
+                  return;
+                }
 
-                  try {
-                    final cartProvider =
-                        Provider.of<CartProvider>(context, listen: false);
-                    await cartProvider.addToCart(
-                      Product(
-                        image: widget.product.image,
-                        name: widget.product.name,
-                        category: widget.product.category,
-                        rating: widget.product.rating,
-                        price: widget.product.price,
-                        quantity: _itemCount,
-                      ),
-                    );
-                    _showSuccessDialog(context);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to add to cart: $e')),
-                    );
+                setState(() => _isAddingToCart = true);
+                
+                try {
+                  final cartProvider = Provider.of<CartProvider>(
+                    context, 
+                    listen: false
+                  );
+                  
+                  await cartProvider.ensureInitialized;
+                  
+                  await cartProvider.addToCart(
+                    Product(
+                      image: widget.product.image,
+                      name: widget.product.name,
+                      category: widget.product.category,
+                      rating: widget.product.rating,
+                      price: widget.product.price,
+                      quantity: _itemCount,
+                    ),
+                  );
+                  
+                  _showSuccessDialog(context);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to add to cart: ${e.toString()}'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                } finally {
+                  if (mounted) {
+                    setState(() => _isAddingToCart = false);
                   }
-                },
-              ),
+                }
+              },
+            ),
             ],
           )),
     );

@@ -65,6 +65,7 @@ class SearchField extends StatelessWidget {
             color: colors,
           ),
         ),
+        
       ),
     );
   }

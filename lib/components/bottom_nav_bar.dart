@@ -27,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     screens = [
       const HomePage(),
       const CartPage(),
-      OrdersPage(),
+      const OrdersPage(),
       const ProfilesPage(),
     ];
   }

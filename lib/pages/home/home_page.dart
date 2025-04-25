@@ -160,10 +160,10 @@ class ProductGrid extends StatelessWidget {
         final products = snapshot.data!;
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.7,
+            crossAxisCount: 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio: 0.90,
           ),
           itemCount: products.length,
           itemBuilder: (context, index) {
@@ -178,26 +178,39 @@ class ProductGrid extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    width: 120,
-                    height: 100,
-                    color: Colors.grey[200],
+                    width: double.infinity,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.green),
+                      borderRadius: BorderRadius.circular(10)
+                    ),
                     // ignore: unnecessary_null_comparison
                     child: product.image != null
-                        ? Image.asset(
-                            product.image,
-                            fit: BoxFit.cover,
-                          )
+                        ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                              product.image,
+                              fit: BoxFit.cover,
+                              
+                            ),
+                        )
                         : const Icon(Icons.image_not_supported),
                   ),
                   const SizedBox(height: 5),
-                  Text(
-                    product.name,
-                    style: const TextStyle(color: Colors.red),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        product.name,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      Text(
+                        'rating: ${product.rating}',
+                        style: TextStyle(color: colors),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${product.rating}',
-                    style: TextStyle(color: colors),
-                  ),
+                   
                 ],
               ),
             );

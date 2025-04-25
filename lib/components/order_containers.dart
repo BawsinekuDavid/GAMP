@@ -1,5 +1,5 @@
+// components/order_containers.dart
 import 'package:flutter/material.dart';
-import 'package:gmarket_app/pages/Orders/track_order_page.dart';
 
 class Ordercontainers extends StatelessWidget {
   final String imagePath;
@@ -8,7 +8,10 @@ class Ordercontainers extends StatelessWidget {
   final String trailingtext;
   final String nametext;
   final DateTime dateTime;
-  final Function()?onTap;
+  final String orderId;
+  final String vendorName;
+  final String currentStatus;
+  final VoidCallback onTap;
 
   const Ordercontainers({
     super.key,
@@ -17,87 +20,66 @@ class Ordercontainers extends StatelessWidget {
     required this.subtitletext,
     required this.trailingtext,
     required this.nametext,
-    required this.dateTime, this.onTap,
+    required this.dateTime,
+    required this.orderId,
+    required this.vendorName,
+    required this.currentStatus,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap:(){Navigator.push(context, MaterialPageRoute(builder: (context)=>const TrackOrderPage()));},
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(bottom: 5),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade100,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: SizedBox(
-                height: 100,
-                width: 100,
+      onTap: onTap,
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
                 child: Image.asset(
                   imagePath,
+                  width: 60,
+                  height: 60,
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    titletext,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      titletext,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    nametext,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
+                    Text(subtitletext),
+                    Text(nametext),
+                    Text(
+                      '${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                      style: const TextStyle(color: Colors.grey),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    subtitletext,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "${dateTime.day}/${dateTime.month}/${dateTime.year}",
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              trailingtext,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
+              Chip(
+                label: Text(trailingtext),
+                backgroundColor: trailingtext == 'Processing'
+                    ? Colors.orange[100]
+                    : Colors.green[100],
+                labelStyle: TextStyle(
+                  color: trailingtext == 'Processing'
+                      ? Colors.orange[800]
+                      : Colors.green[800],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

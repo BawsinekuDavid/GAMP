@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 
+part 'product_page.g.dart';
  
 
 @HiveType(typeId: 0)

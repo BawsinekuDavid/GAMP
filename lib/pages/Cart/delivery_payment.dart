@@ -1,8 +1,8 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/components/cart_cointainers.dart';
-import 'package:gmarket_app/pages/Orders/order_sucessful.dart';
 
 import '../../constant.dart';
 
@@ -16,11 +16,36 @@ class DeliveryPayment extends StatefulWidget {
 class _DeliveryPaymentState extends State<DeliveryPayment> {
   final promoControllerPickup = TextEditingController();
   final promoControllerDelivery = TextEditingController();
+  final addressController = TextEditingController(text: "234, Nii Ayiksi St");
+  final contactController = TextEditingController(text: "+233 551015625");
+  String paymentMethod = "Cash";
+  double subtotal = 5.00; // Example subtotal
+  double deliveryFee = 0.0;
+  double discount = 0.0;
 
-  // Placeholder for calculating total
-  String calculateTotal({double subtotal = 5.00, double delivery = 0.0}) {
-    double total = subtotal + delivery;
-    return total.toStringAsFixed(2);
+  @override
+  void dispose() {
+    promoControllerPickup.dispose();
+    promoControllerDelivery.dispose();
+    addressController.dispose();
+    contactController.dispose();
+    super.dispose();
+  }
+
+  double calculateTotal() {
+    return subtotal + deliveryFee - discount;
+  }
+
+  void applyPromoCode(String code, {bool isPickup = true}) {
+    // Here you would typically validate the promo code with your backend
+    // For demonstration, we'll just apply a fixed discount
+    setState(() {
+      if (code.isNotEmpty) {
+        discount = 1.00; // GHC 1.00 discount for any non-empty code
+      } else {
+        discount = 0.0;
+      }
+    });
   }
 
   @override
@@ -39,12 +64,8 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
           ),
           bottom: TabBar(
             tabs: const [
-              Tab(
-                child: Text("Self Pickup"),
-              ),
-              Tab(
-                child: Text("Delivery"),
-              ),
+              Tab(child: Text("Self Pickup")),
+              Tab(child: Text("Delivery")),
             ],
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             labelColor: colors,
@@ -55,6 +76,11 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
               borderRadius: BorderRadius.circular(10),
             ),
             indicatorSize: TabBarIndicatorSize.tab,
+            onTap: (index) {
+              setState(() {
+                deliveryFee = index == 0 ? 0.0 : 2.0;
+              });
+            },
           ),
         ),
         body: TabBarView(
@@ -62,14 +88,12 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
             _buildTabContent(
               context,
               promoControllerPickup,
-              deliveryFee: 0.0,
-              totalLabel: calculateTotal(subtotal: 5.00),
+              isPickup: true,
             ),
             _buildTabContent(
               context,
               promoControllerDelivery,
-              deliveryFee: 2.00,
-              totalLabel: calculateTotal(subtotal: 5.00, delivery: 2.00),
+              isPickup: false,
             ),
           ],
         ),
@@ -77,8 +101,11 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
     );
   }
 
-  Widget _buildTabContent(BuildContext context, TextEditingController controller,
-      {required double deliveryFee, required String totalLabel}) {
+  Widget _buildTabContent(
+    BuildContext context,
+    TextEditingController controller, {
+    required bool isPickup,
+  }) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: SingleChildScrollView(
@@ -92,28 +119,34 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
               tailIcon: Icon(Icons.add_circle),
             ),
             const SizedBox(height: 20),
-            const CartCointainers(
-              icon: Icon(Icons.location_searching),
+            CartCointainers(
+              icon: const Icon(Icons.location_searching),
               name: "Address",
-              subname: "234, Nii Ayiksi St",
-              tailIcon: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
+              subname: addressController.text,
+              tailIcon: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                onPressed: () => _editAddress(context),
               ),
             ),
             const SizedBox(height: 20),
-            const CartCointainers(
-              icon: Icon(Icons.person),
+            CartCointainers(
+              icon: const Icon(Icons.person),
               name: "Contact",
-              subname: "+233 551015625",
-              tailIcon: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+              subname: contactController.text,
+              tailIcon: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                onPressed: () => _editContact(context),
+              ),
             ),
             const SizedBox(height: 20),
-            const CartCointainers(
-              icon: Icon(Icons.watch_later_outlined),
+            CartCointainers(
+              icon: const Icon(Icons.payment),
               name: "Payment Option",
-              subname: "Cash",
-              tailIcon: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+              subname: paymentMethod,
+              tailIcon: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                onPressed: () => _selectPaymentMethod(context),
+              ),
             ),
             const SizedBox(height: 20),
             DottedBorder(
@@ -122,76 +155,105 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
               radius: const Radius.circular(7),
               strokeWidth: 1,
               dashPattern: const [6, 3],
-              child: TextField(
-                textAlign: TextAlign.center,
-                controller: controller,
-                decoration: InputDecoration(
-                  focusColor: colors,
-                  hintText: "Add Promo Code",
-                  hintStyle: TextStyle(
-                    fontSize: 20,
-                    color: colors,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        hintText: "Add Promo Code",
+                        hintStyle: TextStyle(fontSize: 20, color: colors),
+                        border: InputBorder.none,
+                      ),
+                    ),
                   ),
-                  border: InputBorder.none,
-                ),
+                  TextButton(
+                    onPressed: () =>
+                        applyPromoCode(controller.text, isPickup: isPickup),
+                    child: Text(
+                      "APPLY",
+                      style: TextStyle(color: colors),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 15),
-            SizedBox(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Sub Total"),
-                          Text("Ghc 5.00"),
-                        ],
-                      ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Sub Total"),
+                        Text("GHC ${subtotal.toStringAsFixed(2)}"),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Delivery: "),
+                        Text("GHC ${deliveryFee.toStringAsFixed(2)}"),
+                      ],
+                    ),
+                    if (discount > 0) ...[
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Delivery: "),
-                          Text("Ghc ${deliveryFee.toStringAsFixed(2)}"),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Total: "),
+                          const Text("Discount: "),
                           Text(
-                            "Ghc $totalLabel",
-                            style: TextStyle(fontSize: 16, color: colors),
+                            "-GHC ${discount.toStringAsFixed(2)}",
+                            style: const TextStyle(color: Colors.green),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      AppBtn(
-                        lbl: "CONFIRM",
-                        colorState: colors,
-                        textColorState: Colors.white,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OrderSucessful(),
-                            ),
-                          );
-                        },
-                      ),
                     ],
-                  ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Total: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "GHC ${calculateTotal().toStringAsFixed(2)}",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: colors,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    AppBtn(
+                      lbl: "CONFIRM",
+                      colorState: colors,
+                      textColorState: Colors.white,
+                      onPressed: () {
+                        Fluttertoast.showToast(
+                          msg: "Order Successful",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      },
+                    )
+                  ],
                 ),
               ),
             ),
@@ -199,5 +261,119 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
         ),
       ),
     );
+  }
+
+  Future<void> _editAddress(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Edit Address"),
+        content: TextField(
+          controller: addressController,
+          decoration: const InputDecoration(hintText: "Enter your address"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("CANCEL"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, addressController.text);
+            },
+            child: const Text("SAVE"),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        addressController.text = result;
+      });
+    }
+  }
+
+  Future<void> _editContact(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Edit Contact"),
+        content: TextField(
+          controller: contactController,
+          decoration:
+              const InputDecoration(hintText: "Enter your phone number"),
+          keyboardType: TextInputType.phone,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("CANCEL"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, contactController.text);
+            },
+            child: const Text("SAVE"),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        contactController.text = result;
+      });
+    }
+  }
+
+  Future<void> _selectPaymentMethod(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Select Payment Method"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text("Cash"),
+              leading: Radio(
+                value: "Cash",
+                groupValue: paymentMethod,
+                onChanged: (value) {
+                  Navigator.pop(context, value);
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text("Mobile Money"),
+              leading: Radio(
+                value: "Mobile Money",
+                groupValue: paymentMethod,
+                onChanged: (value) {
+                  Navigator.pop(context, value);
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text("Card"),
+              leading: Radio(
+                value: "Card",
+                groupValue: paymentMethod,
+                onChanged: (value) {
+                  Navigator.pop(context, value);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        paymentMethod = result;
+      });
+    }
   }
 }

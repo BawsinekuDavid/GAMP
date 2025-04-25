@@ -1,91 +1,110 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../pages/Products/product_page.dart';
- 
+import 'package:gmarket_app/pages/Products/product_page.dart';
 
-class CartProvider with ChangeNotifier {
+import '../pages/Orders/orders.dart';
+
+class CartProvider extends ChangeNotifier {
   late final Box<Product> _cartBox;
   List<Product> _products = [];
   bool _isInitialized = false;
+  bool _isInitializing = false;
+
+  var ensureInitialized;
 
   List<Product> get products => _products;
   bool get isReady => _isInitialized;
 
-  Future<void> init() async {
+  final List<Order> _orders = [];
+  
+  List<Order> get orders => _orders;
+  
+  void checkout() {
+    if (_products.isEmpty) return;
+    
+    final order = Order(
+    id: DateTime.now().millisecondsSinceEpoch.toString(),
+    products: List.from(_products),
+    total: calculateTotal(),
+    date: DateTime.now(),
+     status: 'Pending',
+  );
+    
+    _orders.add(order);
+    _products.clear();
+    notifyListeners();
+  }
+
+  Future<void> _ensureInitialized() async {
     if (_isInitialized) return;
-    
-    _cartBox = await Hive.openBox<Product>('cart');
-    _products = _cartBox.values.toList();
-    _isInitialized = true;
-    notifyListeners();
-  }
-
-  Future<void> addToCart(Product product) async {
-    await init();
-    
-    final existingIndex = _products.indexWhere(
-      (p) => p.name == product.name && p.price == product.price
-    );
-
-    if (existingIndex >= 0) {
-      // Update quantity if product exists
-      final existing = _products[existingIndex];
-      await _cartBox.putAt(
-        existingIndex,
-        existing.copyWith(quantity: existing.quantity + product.quantity),
-      );
-    } else {
-      // Add new product
-      await _cartBox.add(product);
-    }
-    
-    _products = _cartBox.values.toList();
-    notifyListeners();
-  }
-
-  Future<void> updateQuantity(int index, int newQuantity) async {
-    await init();
-    
-    if (newQuantity <= 0) {
-      await removeFromCart(index);
+    if (_isInitializing) {
+      // Wait if already initializing
+      await Future.doWhile(() => !_isInitialized);
       return;
     }
 
-    final product = _products[index];
-    await _cartBox.putAt(
-      index,
-      product.copyWith(quantity: newQuantity),
-    );
-    
+    _isInitializing = true;
+    try {
+      // Check if the box is already open, open if not
+      if (!Hive.isBoxOpen('cartbox')) {
+        await Hive.openBox<Product>('cartbox');
+      }
+
+      _cartBox = Hive.box<Product>('cartbox');
+      _products = _cartBox.values.toList();
+      _isInitialized = true;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error initializing cart box: $e');
+      _isInitializing = false;
+      rethrow;
+    }
+  }
+
+  Future<void> addToCart(Product product) async {
+    await _ensureInitialized();
+
+    await _cartBox.add(product);
     _products = _cartBox.values.toList();
     notifyListeners();
   }
 
-  Future<void> removeFromCart(int index) async {
-    await init();
-    await _cartBox.deleteAt(index);
+  Future<void> removeFromCart(Product product) async {
+    await _ensureInitialized();
+
+    await product.delete();
     _products = _cartBox.values.toList();
     notifyListeners();
   }
 
   Future<void> clearCart() async {
-    await init();
+    await _ensureInitialized();
+
     await _cartBox.clear();
     _products = [];
     notifyListeners();
   }
 
-  double get totalPrice {
+  double calculateTotal() {
     return _products.fold(
       0.0,
       (total, product) => total + (product.price * product.quantity),
     );
   }
 
-  int get itemCount {
-    return _products.fold(
-      0,
-      (count, product) => count + product.quantity,
+    void addOrder() {
+    if (products.isEmpty) return;
+
+    final newOrder = Order(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      products: List<Product>.from(products),
+      total: calculateTotal(),
+      date: DateTime.now(),
+      status: "Pending",
     );
+
+    orders.add(newOrder);
+    products.clear(); // clear the cart
+    notifyListeners();
   }
 }

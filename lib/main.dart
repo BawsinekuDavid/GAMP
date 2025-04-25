@@ -12,17 +12,27 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'db/db_helper.dart';
-import 'pages/Products/product_adapter.dart';
+import 'pages/Products/product_page.dart';
 
+
+
+class RouteNames {
+  static const String splash = '/';
+  static const String welcome = "/welcome";
+  static const String login = "/login";
+  static const String home = "/home";
+ 
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Hive
   await Hive.initFlutter();
-  
-  // Register adapters
-  Hive.registerAdapter(ProductAdapter());
- // await Hive.openBox<Product>('cart');
+
+if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(ProductAdapter());
+  }
+ //Hive.openBox<Product>('cartBox');
   
  // Initialize database
   final dbHelper = DbHelper();
@@ -54,8 +64,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: RouteNames.splash,
       routes: {
+
+        
         '/': (context) => const SplashPage(),
         '/welcome': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
