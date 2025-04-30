@@ -36,7 +36,7 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
     return subtotal + deliveryFee - discount;
   }
 
-  void applyPromoCode(String code, {bool isPickup = true}) {
+  applyPromoCode(String code, {bool isPickup = true}) {
     // Here you would typically validate the promo code with your backend
     // For demonstration, we'll just apply a fixed discount
     setState(() {
@@ -168,14 +168,13 @@ class _DeliveryPaymentState extends State<DeliveryPayment> {
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () =>
-                        applyPromoCode(controller.text, isPickup: isPickup),
-                    child: Text(
-                      "APPLY",
-                      style: TextStyle(color: colors),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(colors)
                     ),
-                  ),
+                      onPressed:
+                          applyPromoCode(controller.text, isPickup: isPickup),
+                      child: const Text("Apply", style: TextStyle(color: Colors.white),))
                 ],
               ),
             ),

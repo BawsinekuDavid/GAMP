@@ -15,93 +15,92 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
+
+
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: 200,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text(
-                    "Find Fresh Produce",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SearchField(
-                    icon: const Icon(
-                      Icons.location_on,
-                      color: Colors.green,
-                    ),
-                    hintText: "Location",
-                    bgColor: Colors.white,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SearchField(
-                    icon: const Icon(
-                      Icons.search,
-                      color: Colors.green,
-                    ),
-                    hintText: "Search",
-                    bgColor: Colors.white,
-                  ),
-                  MySearchBtn(
-                    lab: "Search",
-                    colorState: colors,
-                    onPressed: () {},
-                    textColorState: Colors.white,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Categories",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-            ],
+        appBar:AppBar(
+  automaticallyImplyLeading: false,
+  toolbarHeight: 200,
+  title: Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Find Fresh Produce",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          bottom: TabBar(
-            labelColor: Colors.white,
-            labelStyle: const TextStyle(
-              color: Colors.black,
+          // Current Location Button
+          IconButton(
+            icon: const Row(
+              children: [
+                Icon(Icons.location_on, color: Colors.green),
+                SizedBox(width: 4),
+                Text("Current Location", style: TextStyle(color: Colors.green)),
+              ],
             ),
-            indicator: BoxDecoration(
-                color: colors,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10)),
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: colors,
-            tabs: const [
-              Tab(child: Text("Fruits")),
-              Tab(
-                child: Text("Vegatable"),
-              ),
-              Tab(
-                child: Text("Meat & Fish"),
-              )
-            ],
+            onPressed: () {
+              // Add location fetching logic here
+            },
           ),
-        ),
+        ],
+      ),
+      const SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: SearchField(
+              icon: const Icon(Icons.search, color: Colors.green),
+              hintText: "Search for produce...",
+              bgColor: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 10),
+          MySearchBtn(
+            lab: "Search",
+            colorState: colors,
+            onPressed: () {},
+            textColorState: Colors.white,
+          ),
+        ],
+      ),
+      const SizedBox(height: 25),
+      const Row(
+        children: [
+          Text(
+            "Categories",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+      const SizedBox(height: 15),
+    ],
+  ),
+  bottom: TabBar(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    indicatorSize: TabBarIndicatorSize.tab,
+    labelColor: Colors.white,
+    unselectedLabelColor: Colors.black,
+    labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+    indicator: BoxDecoration(
+    shape: BoxShape.rectangle,
+      color: colors,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    tabs: const [
+      Tab(text: "Fruits"),
+      Tab(text: "Vegetables"),
+      Tab(text: "Meat & Fish"),
+    ],
+  ),
+),
         body: const Padding(
           padding: EdgeInsets.all(8.0),
           child: TabBarView(
@@ -114,8 +113,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-
-    //bottom nav bar
+ 
   }
 }
 
@@ -196,7 +194,11 @@ class ProductGrid extends StatelessWidget {
                         )
                         : const Icon(Icons.image_not_supported),
                   ),
+
+                  
                   const SizedBox(height: 5),
+
+                 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -204,13 +206,15 @@ class ProductGrid extends StatelessWidget {
                         product.name,
                         style: const TextStyle(color: Colors.red),
                       ),
-                      Text(
+                       Text("GHC ${product.price}",
+                  style: TextStyle(color: colors),),
+                      
+                    ],
+                  ),
+                   Text(
                         'rating: ${product.rating}',
                         style: TextStyle(color: colors),
                       ),
-                    ],
-                  ),
-                   
                 ],
               ),
             );

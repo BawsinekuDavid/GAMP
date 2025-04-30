@@ -99,15 +99,39 @@ class _LoginPageState extends State<LoginPage> {
 
             MyTextField(
                 controller: _emailController,
-                hintText: "email",
+                hintText: "Email",
                 obsecureText: false, ),
 
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
 
-            MyTextField(
-                controller: _passwordController,
-                hintText: "password",
-                obsecureText: true),
+             TextField(
+              controller: _passwordController,
+              obscureText: !_isPasswordVisible,
+              decoration: InputDecoration(
+                hintText: "Password",
+                hintStyle:const TextStyle(color: Colors.grey),
+                enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green.shade100),
+            borderRadius: BorderRadius.circular(10)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.green.shade400)),
+            suffixIcon: IconButton(
+              onPressed: ( ){
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+            }, icon: Icon(
+              _isPasswordVisible
+            ? Icons.visibility
+            : Icons.visibility_off,
+            )
+            )
+                ),
+              
+
+              ),
+             
 
             const SizedBox(height: 30),
 

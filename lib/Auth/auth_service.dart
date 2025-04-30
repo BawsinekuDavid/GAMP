@@ -15,7 +15,7 @@ class AuthService {
   final String _clientSecret = 'wNngFGjk19EdHY3TNTrToCkzrvKLCgvC';
 
   final String _tokenEndpoint =
-      'http://192.168.234.130:8080/realms/gamp/protocol/openid-connect/token';
+      'http://10.0.2.2:8080/realms/gamp/protocol/openid-connect/token';
 
  Future<Map<String, dynamic>?> login(
     String email, String password, BuildContext context) async {
@@ -25,6 +25,7 @@ class AuthService {
     final body = {
       'grant_type': 'client_credentials',
       'client_id': _clientId,
+      'client_secret': _clientSecret,
       'username': email,
       'password': password,
     };
@@ -70,7 +71,7 @@ class AuthService {
   // Optional: Test API connection (if needed)
   Future<void> testApiConnection() async {
     try {
-      final response = await http.get(Uri.parse("http://192.168.234.130:8080/api"));
+      final response = await http.get(Uri.parse("http://10.0.2.2:8080/api"));
       _logger.d("API Connection Test Status: ${response.statusCode}");
     } catch (e) {
       _logger.e("API Connection Error: $e");
