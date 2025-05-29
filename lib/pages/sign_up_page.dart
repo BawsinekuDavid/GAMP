@@ -47,18 +47,24 @@ class SignUpPage extends StatelessWidget {
             Center(
               
               
-              child: MyTextField(controller: fullnameController, hintText: 'fullname', obsecureText: false, ),
+              child: MyTextField(controller: fullnameController, hintText: 'fullname', obsecureText: false, validator: (String? value) {
+                return null;
+                }, obscureText: false, ),
               ),
 
               const SizedBox(height: 20),
 
 
-              MyTextField(controller: emailController, hintText: "email", obsecureText: false, ),
+              MyTextField(controller: emailController, hintText: "email", obsecureText: false, validator: (String? value) {
+                return null;
+                }, obscureText: false, ),
             
               
               const SizedBox(height: 20),
 
-              MyTextField(controller: passwordController, hintText: "password", obsecureText: true, ),
+              MyTextField(controller: passwordController, hintText: "password", obsecureText: true, validator: (String? value) {
+                return null;
+                }, obscureText: false, ),
 
               const SizedBox(height: 50),
         

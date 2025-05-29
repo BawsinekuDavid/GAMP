@@ -2,7 +2,9 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/models/order_provider.dart';
+
+import '../../models/order_module.dart';
+ 
 
 class OrderSucessful extends StatelessWidget {
   const OrderSucessful({super.key, required Order order});

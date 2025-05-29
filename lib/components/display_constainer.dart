@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gmarket_app/constant.dart';
-import 'package:gmarket_app/pages/Purchasing/purchase_page.dart';
 
 // ignore: must_be_immutable
 class DisplayContainer extends StatelessWidget {
@@ -19,7 +18,8 @@ class DisplayContainer extends StatelessWidget {
       required this.containerText,
       required this.numberRate,
       required this.names,
-      required this.onPressed, required double price});
+      required this.onPressed,
+      required double price});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +37,7 @@ class DisplayContainer extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: InkWell(
-                onTap: () {
-                   
-                },
+                onTap: () {},
                 child: Image.asset(
                   imagePath,
                   width: 120,
@@ -106,24 +104,21 @@ class ProductConatiner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-    
       width: 150,
       height: 200,
       padding: const EdgeInsets.all(10), // Add padding for better spacing
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey.shade200, // Added background color for better contrast
+        color:
+            Colors.grey.shade200, // Added background color for better contrast
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> const PurchasePage()));
-              },
+              onTap: () {},
               child: Image.asset(
                 imagePath,
                 width: 150,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gmarket_app/Endpoints/productsapi.dart';
 import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/components/display_constainer.dart';
@@ -6,8 +7,9 @@ import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/pages/categories/fruits_page.dart';
 import 'package:gmarket_app/pages/categories/meat_fish_page.dart';
 
-import '../../db/db_helper.dart';
-import '../Products/product_page.dart';
+ 
+import '../../models/products_module.dart';
+ 
  
 
 class VegetablesPage extends StatelessWidget {
@@ -27,7 +29,7 @@ class VegetablesPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: FutureBuilder<List<Product>>(
-          future: DbHelper().getProductsByCategory('Vegetables'),
+          future: ProductsApi().fetchProductsByCategory('Vegetables'),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -172,11 +174,11 @@ class VegetablesPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final product = products[index];
                             return DisplayContainer(
-                              imagePath: product.image,
+                              imagePath: product.imageUrl,
                               containerText: Colors.red,
                               numberRate: product.rating,
-                              names: product.name,
-                              price: product.price,
+                              names: product.product,
+                              price: product.unitPrice,
                               onPressed: () {
                                 // Navigate to product details
                               },

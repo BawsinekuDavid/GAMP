@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:gmarket_app/models/cart_provider.dart';
+import 'package:gmarket_app/PROVIDERS/cart_provider.dart';
 import 'package:gmarket_app/pages/Cart/cart_page.dart';
 import '../pages/Orders/orders_page.dart';
 import '../pages/Profiles/profiles_page.dart';
@@ -27,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     screens = [
       const HomePage(),
       const CartPage(),
-      const OrdersPage(),
+      const OrdersPage(userId: '7ddbeb1a-9b61-493a-8c29-f90eee1c4287', ),
       const ProfilesPage(),
     ];
   }
@@ -37,9 +37,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final cartProvider = Provider.of<CartProvider>(context);
 
     return Scaffold(
+      backgroundColor: Colors.green.shade50,
       body: screens[currentIndex], // Show the selected screen
 
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.green.shade50,
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index), // Update index
         selectedItemColor: Colors.green, // Active tab color
@@ -54,8 +56,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             icon: Stack(
               clipBehavior: Clip.none,
               children: [
-                const Icon(Icons.shopping_bag),
-                if (cartProvider.products.isNotEmpty)
+                const Icon(Icons.shopping_bag), 
+                if (cartProvider.cartItems.isNotEmpty)
                   Positioned(
                     right: -6,
                     top: -6,
@@ -70,7 +72,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         minHeight: 16,
                       ),
                       child: Text(
-                        cartProvider.products.length.toString(), // Cart count
+                        cartProvider.cartItems.length.toString(), // Cart count
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,

@@ -25,67 +25,62 @@ class SplashPage extends StatelessWidget {
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-          
-               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50),
-                child: Text(
-                  "From fresh produce to everyday essentials, we're here to deliver the best to your door!",
-                  // style: TextStyle(fontSize: 18.0,
-                  // fontWeight: FontWeight.normal,
-                  // color: bg),
-                  style: kTitle(context),
-                ),
-              ),
-            
-            const SizedBox(height: 60),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 140),
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Text(
+                "From fresh produce to everyday essentials, we're here to deliver the best to your door!",
+                // style: TextStyle(fontSize: 18.0,
+                // fontWeight: FontWeight.normal,
+                // color: bg),
+                style: kTitle(context),
+              ),
+            ),
+            const SizedBox(height: 60),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 140),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 15,
-                    height: 15,
-                    decoration: BoxDecoration(
-                        color: colors,
-                        borderRadius: BorderRadius.circular(100)),
-                  ),
-                  Container(
-                    width: 15,
-                    height: 15,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
-                        borderRadius: BorderRadius.circular(100)),
-                  ),
-                  _buldContianer()
-                ],
+                children: [],
               ),
             ),
             const SizedBox(height: 60),
             AppBtn(
               lbl: 'Get Started',
               onPressed: () {
-                Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/home');
               },
-              textColorState: Colors.white,
+              textColorState: const Color.fromARGB(255, 255, 255, 255),
               colorState: colors,
             )
+
+            
           ],
+
+  //           AppBody(
+  //   'prograssiveDots',
+  //   LoadingAnimationWidget.progressiveDots(
+  //     color: Colors.white,
+  //     size: _kSize,
+  //   ),
+  // ),
+          
         ),
+
+      
       ),
     );
   }
 
-  Widget _buldContianer() {
-    return Container(
-      width: 15,
-      height: 15,
-      decoration: BoxDecoration(
-          color: Colors.grey.shade400,
-          borderRadius: BorderRadius.circular(100)),
-    );
-  }
+  // Widget _buldContianer() {
+  //   return Container(
+  //     width: 15,
+  //     height: 15,
+  //     decoration: BoxDecoration(
+  //         color: Colors.grey.shade400,
+  //         borderRadius: BorderRadius.circular(100)),
+  //   );
+  // }
 }
 
 class BezierClipper extends CustomClipper<Path> {

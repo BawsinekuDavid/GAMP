@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gmarket_app/components/app_btn.dart';
-import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/pages/Profiles/edit_profile_page.dart';
+
+import '../../components/text_field.dart';
 
 class ProfilesPage extends StatelessWidget {
   const ProfilesPage({super.key});
@@ -39,28 +40,38 @@ class ProfilesPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50),
-            MyTextField(
+           MyTextField(
               controller: nameController,
               hintText: "name",
-              obsecureText: false,
+              obsecureText: false , validator: (String? value) {
+                return null;
+                }, obscureText: false
             ),
             const SizedBox(height: 50),
             MyTextField(
               controller: emailController,
               hintText: "email",
               obsecureText: false,
+               validator: (String? value) {
+                 return null;
+                 }, obscureText: false
             ),
             const SizedBox(height: 50),
             MyTextField(
               controller: phoneController,
               hintText: "phone number",
-              obsecureText: false,
+              obsecureText: false, validator: (String? value) {
+                return null;
+                }, obscureText: false,
             ),
             const SizedBox(height: 50),
             MyTextField(
               controller: paymentModeController,
               hintText: "mode",
               obsecureText: false,
+               validator: (String? value) {
+                 return null;
+                 }, obscureText: false
             ),
             const SizedBox(height: 30),
             Row(

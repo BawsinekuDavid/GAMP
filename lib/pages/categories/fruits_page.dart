@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gmarket_app/Endpoints/productsapi.dart';
 import 'package:gmarket_app/constant.dart';
 import 'package:gmarket_app/components/app_btn.dart';
 import 'package:gmarket_app/components/display_constainer.dart';
@@ -6,24 +7,31 @@ import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/pages/categories/meat_fish_page.dart';
 import 'package:gmarket_app/pages/categories/vegetables_page.dart';
 
-import '../../db/db_helper.dart';
-import '../Products/product_page.dart';
+ 
+import '../../models/products_module.dart';
+ 
 
-class FruitsPage extends StatelessWidget {
+class FruitsPage extends StatefulWidget {
   const FruitsPage({super.key});
 
+  @override
+  State<FruitsPage> createState() => _FruitsPageState();
+}
+
+class _FruitsPageState extends State<FruitsPage> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: colors,
-        title: const Text("Fruits", style: TextStyle(color: Colors.white)),
+        title: const Text("Fruit", style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: SafeArea(
         child: FutureBuilder<List<Product>>(
-          future: DbHelper().getProductsByCategory('Fruits'),
+          future: ProductsApi().fetchProductsByCategory('Fruit'),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -171,11 +179,11 @@ class FruitsPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final product = products[index];
                             return DisplayContainer(
-                              imagePath: product.image,
+                              imagePath: product.imageUrl,
                               containerText: Colors.red,
                               numberRate: product.rating,
-                              names: product.name,
-                              price: product.price,
+                              names: product.product,
+                              price: product.unitPrice,
                               onPressed: () {
                                 // Navigate to product details
                               },

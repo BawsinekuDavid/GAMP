@@ -45,12 +45,16 @@ class OtpReset extends StatelessWidget {
                 MyTextField(
                     controller: emailController,
                     hintText: "Enter email",
-                    obsecureText: false),
+                    obsecureText: false, validator: (String? value) {
+                      return null;
+                      }, obscureText: true,),
                 const SizedBox(height: 20),
                 MyTextField(
                     controller: numberController,
                     hintText: "Enter phone Number",
-                    obsecureText: false,),
+                    obsecureText: false, validator: (String? value) {
+                      return null;
+                      }, obscureText: true,),
                 const SizedBox(height: 30),
                 AppBtn(
                     lbl: "Continue",
