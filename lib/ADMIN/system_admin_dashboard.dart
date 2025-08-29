@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmarket_app/ADMIN/product_form.dart';
 import 'package:gmarket_app/models/category_module.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io';
 import 'dart:convert';
@@ -10,6 +12,7 @@ import 'package:http_parser/http_parser.dart';
 import '../Endpoints/categoryapi.dart';
 import '../Endpoints/product_service.dart';
 import '../constant.dart';
+import '../models/product_createRequest.dart';
 import '../models/products_module.dart';
 
 class SystemAdminDashboard extends StatefulWidget {
@@ -19,14 +22,15 @@ class SystemAdminDashboard extends StatefulWidget {
   State<SystemAdminDashboard> createState() => _SystemAdminDashboardState();
 }
 
-class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
-  // Services
+class _SystemAdminDashboardState extends State<SystemAdminDashboard>
+    with SingleTickerProviderStateMixin {
   final ProductService _productService = ProductService();
   final Categoryapi _categoryApi = Categoryapi();
+  final Logger _logger = Logger();
 
-  // State variables
   List<Category> _categories = [];
   List<Product> _products = [];
+  List<Product> _filteredProducts = [];
 
   bool _isLoading = true;
   bool _isUploading = false;
@@ -35,40 +39,68 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
   Product? _editingProduct;
   String? selectedCategoryId;
   double _uploadProgress = 0;
+  String _searchQuery = '';
 
-  // Form controllers
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _quantityController = TextEditingController();
   final _ratingController = TextEditingController();
+  final _searchController = TextEditingController();
+  
+  static const String _ownerId = "7ddbeb1a-9b61-493a-8c29-f90eee1c4287";
 
-  // Constants
-  static const double _cardElevation = 4.0;
-  static const double _cardBorderRadius = 12.0;
-  static const double _imageSize = 50.0;
+  // Modern UI Constants
+  static const double _cardElevation = 2.0;
+  static const double _cardBorderRadius = 16.0;
+  static const double _imageSize = 60.0;
+  static const EdgeInsets _defaultPadding = EdgeInsets.all(16.0);
+  static const EdgeInsets _cardPadding = EdgeInsets.all(12.0);
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
     _loadInitialData();
-    _loadCategories();
-    _loadProducts();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _nameController.dispose();
+    _priceController.dispose();
+    _quantityController.dispose();
+    _ratingController.dispose();
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadInitialData() async {
     setState(() {
-   
+      _isLoading = true;
+      _errorMessage = null;
     });
+    
     try {
       await Future.wait([
         _loadProducts(),
         _loadCategories(),
       ]);
+      _animationController.forward();
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = 'Failed to load data. Please try again.';
       });
+      _logger.e('Error loading initial data: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -82,21 +114,13 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
       setState(() {
         _categories = categories;
         if (selectedCategoryId == null && categories.isNotEmpty) {
-        selectedCategoryId = categories.first.id;
-      }
+          selectedCategoryId = categories.first.id;
+        }
       });
     } catch (e) {
-      _showErrorSnackbar('Failed to load categories: ${e.toString()}');
+      _showErrorToast('Failed to load categories');
+      _logger.e('Error loading categories: $e');
     }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _priceController.dispose();
-    _quantityController.dispose();
-    _ratingController.dispose();
-    super.dispose();
   }
 
   Future<void> _loadProducts() async {
@@ -104,19 +128,56 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
       final products = await _productService.getProducts();
       setState(() {
         _products = products;
+        _filteredProducts = products;
       });
     } catch (e) {
-      _showErrorSnackbar('Failed to load products: ${e.toString()}');
-      rethrow; // Re-throw to be caught in _loadInitialData
+      _showErrorToast('Failed to load products');
+      _logger.e('Error loading products: $e');
+      rethrow;
     }
   }
 
+  void _filterProducts(String query) {
+    setState(() {
+      _searchQuery = query;
+      if (query.isEmpty) {
+        _filteredProducts = _products;
+      } else {
+        _filteredProducts = _products.where((product) {
+          return product.product.toLowerCase().contains(query.toLowerCase()) ||
+              _getCategoryName(product.category).toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      }
+    });
+  }
+
+  String _getCategoryName(String categoryId) {
+    return _categories
+        .firstWhere(
+          (category) => category.id == categoryId,
+          orElse: () => Category(id: categoryId, name: 'Unknown'),
+        )
+        .name;
+  }
+
+  
+
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+    try {
+      final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      _showErrorToast('Failed to pick image');
+      _logger.e('Error picking image: $e');
     }
   }
 
@@ -129,32 +190,48 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
     });
 
     try {
-      String imageUrl = _editingProduct?.imageUrl ?? '';
+      String? imageUrl;
 
-      // Upload new image if selected
-      if (_imageFile != null) {
+      // Always require an image for product creation
+      if (_editingProduct == null) {
+        if (_imageFile == null) {
+          throw Exception('Product image is required');
+        }
         imageUrl = await _uploadImage(_imageFile!);
+      } else {
+        // For update: upload new image if picked, else use existing
+        if (_imageFile != null) {
+          imageUrl = await _uploadImage(_imageFile!);
+        } else {
+          imageUrl = _editingProduct!.imageUrl;
+        }
       }
 
-      final product = Product(
-        id: _editingProduct?.id ?? '',
-        product: _nameController.text,
-        unitPrice: double.parse(_priceController.text),
-        imageUrl: imageUrl,
-        category: selectedCategoryId ?? _categories.first.id,
-        isApproved: _editingProduct?.isApproved ?? false,
+      final productRequest = ProductCreateRequest(
+        id: _editingProduct?.id,
+        name: _nameController.text.trim(),
         quantity: int.parse(_quantityController.text),
-        rating: double.parse(_ratingController.text),
+        price: double.parse(_priceController.text),
+        categoryId: selectedCategoryId ?? _categories.first.id,
+        ownerId: _ownerId,
+        filePath: imageUrl,
       );
 
       if (_editingProduct == null) {
-        await _productService.createProduct(product);
+        await _productService.createProduct(productRequest);
         _showSuccessSnackbar('Product created successfully');
-        Navigator.pop(context);
       } else {
-        await _productService.updateProduct(product);
+        await _productService.updateProduct(Product(
+          id: _editingProduct!.id,
+          product: _nameController.text.trim(),
+          unitPrice: double.parse(_priceController.text),
+          imageUrl: imageUrl ?? '',
+          category: selectedCategoryId ?? _categories.first.id,
+          isApproved: _editingProduct!.isApproved,
+          quantity: int.parse(_quantityController.text),
+          rating: double.parse(_ratingController.text),
+        ));
         _showSuccessSnackbar('Product updated successfully');
-         Navigator.pop(context);
       }
 
       _resetForm();
@@ -162,6 +239,7 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
       if (mounted) Navigator.pop(context);
     } catch (e) {
       _showErrorSnackbar('Failed to save product: ${e.toString()}');
+      _logger.e('Error submitting form: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -173,6 +251,8 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
 
   Future<String> _uploadImage(File imageFile) async {
     try {
+      setState(() => _uploadProgress = 0.1);
+
       var request = http.MultipartRequest(
         'POST',
         Uri.parse('https://grocex-api.onrender.com/api/v1/products/upload'),
@@ -180,6 +260,8 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
 
       var stream = http.ByteStream(imageFile.openRead());
       var length = await imageFile.length();
+
+      setState(() => _uploadProgress = 0.3);
 
       var multipartFile = http.MultipartFile(
         'file',
@@ -191,15 +273,21 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
 
       request.files.add(multipartFile);
 
+      setState(() => _uploadProgress = 0.7);
+
       var response = await http.Response.fromStream(await request.send());
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
+        setState(() => _uploadProgress = 1.0);
+        _logger.i("Image uploaded successfully: ${responseData['imageUrl']}");
         return responseData['imageUrl'] ?? '';
       } else {
+        _logger.e("Image upload failed with status: ${response.statusCode}");
         throw Exception('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
+      _logger.e('Image upload error: $e');
       throw Exception('Image upload failed: ${e.toString()}');
     }
   }
@@ -210,10 +298,11 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
       _nameController.text = product.product;
       _priceController.text = product.unitPrice.toString();
       selectedCategoryId = _categories.any((c) => c.id == product.category)
-        ? product.category
-        : _categories.first.id;
+          ? product.category
+          : _categories.isNotEmpty ? _categories.first.id : null;
       _quantityController.text = product.quantity.toString();
       _ratingController.text = product.rating.toString();
+      _imageFile = null;
     });
     _openFormModal();
   }
@@ -228,20 +317,54 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
       _imageFile = null;
       _editingProduct = null;
       _uploadProgress = 0;
+      selectedCategoryId = null;
     });
   }
 
-  void _showErrorSnackbar(String message) {
-    Fluttertoast. showToast(msg: "failed to upload product");
+  void _showErrorToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      backgroundColor: Colors.red[400],
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_LONG,
+      fontSize: 14.0,
+    );
+  }
 
+  void _showErrorSnackbar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        backgroundColor: Colors.red[400],
+        duration: const Duration(seconds: 4),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
   }
 
   void _showSuccessSnackbar(String message) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle_outline, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        backgroundColor: Colors.green[400],
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
@@ -250,8 +373,19 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Delete Product'),
-            content: const Text('Are you sure you want to delete this product?'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_cardBorderRadius),
+            ),
+            title: const Row(
+              children: [
+                Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                SizedBox(width: 8),
+                Text('Delete Product'),
+              ],
+            ),
+            content: const Text(
+              'Are you sure you want to delete this product? This action cannot be undone.',
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
@@ -259,8 +393,14 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Delete', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red[400],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('Delete'),
               ),
             ],
           ),
@@ -268,350 +408,354 @@ class _SystemAdminDashboardState extends State<SystemAdminDashboard> {
         false;
   }
 
+  Widget _buildSearchBar() {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(_cardBorderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _searchController,
+        onChanged: _filterProducts,
+        decoration: InputDecoration(
+          hintText: 'Search products or categories...',
+          prefixIcon: Icon(Icons.search, color: colors),
+          suffixIcon: _searchQuery.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    _filterProducts('');
+                  },
+                )
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(_cardBorderRadius),
+            borderSide: BorderSide.none,
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatsCard() {
+    final totalProducts = _products.length;
+    final approvedProducts = _products.where((p) => p.isApproved).length;
+    final outOfStock = _products.where((p) => p.quantity <= 0).length;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: Card(
+        elevation: _cardElevation,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_cardBorderRadius),
+        ),
+        child: Padding(
+          padding: _cardPadding,
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildStatItem(
+                  'Total Products',
+                  totalProducts.toString(),
+                  Icons.inventory,
+                  colors,
+                ),
+              ),
+              Container(width: 1, height: 40, color: Colors.grey[300]),
+              Expanded(
+                child: _buildStatItem(
+                  'Approved',
+                  approvedProducts.toString(),
+                  Icons.check_circle,
+                  Colors.green,
+                ),
+              ),
+              Container(width: 1, height: 40, color: Colors.grey[300]),
+              Expanded(
+                child: _buildStatItem(
+                  'Out of Stock',
+                  outOfStock.toString(),
+                  Icons.warning,
+                  Colors.orange,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String title, String value, IconData icon, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
   Widget _buildProductCard(Product product) {
-    String categoryName = _categories
-        .firstWhere(
-          (category) => category.id == product.category,
-          orElse: () => Category(id: product.id, name:product.category),
-        )
-        .name;
+    final categoryName = _getCategoryName(product.category);
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_cardBorderRadius),
       ),
       elevation: _cardElevation,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: _buildProductImage(product),
-        title: Text(
-          product.product,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(categoryName),
-            Text(
-              '\$${product.unitPrice.toStringAsFixed(2)}',
-              style: const TextStyle(color: Colors.green),
-            ),
-            if (product.quantity > 0)
-              Text('In stock: ${product.quantity}',
-                  style: const TextStyle(color: Colors.blue))
-            else
-              const Text('Out of stock', style: TextStyle(color: Colors.red)),
-            if (product.rating > 0)
-              Row(
-                children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 16),
-                  Text(' ${product.rating.toStringAsFixed(1)}'),
-                ],
+      child: InkWell(
+        borderRadius: BorderRadius.circular(_cardBorderRadius),
+        onTap: () => _editProduct(product),
+        child: Padding(
+          padding: _cardPadding,
+          child: Row(
+            children: [
+              _buildProductImage(product),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.product,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    _buildProductInfo(product, categoryName),
+                  ],
+                ),
               ),
-          ],
+              _buildActionButtons(product),
+            ],
+          ),
         ),
-        trailing: _buildActionButtons(product),
       ),
     );
   }
 
-  Widget _buildProductImage(Product product) {
-    return product.imageUrl.isNotEmpty
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              product.imageUrl,
-              width: _imageSize,
-              height: _imageSize,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.broken_image, color: Colors.grey),
-            ),
-          )
-        : Container(
-            width: _imageSize,
-            height: _imageSize,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(Icons.image, color: Colors.grey),
-          );
-  }
-
-  Widget _buildActionButtons(Product product) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          icon: Icon(
-            product.isApproved ? Icons.check_circle : Icons.pending,
-            color: product.isApproved ? Colors.green : Colors.orange,
-          ),
-          onPressed: () async {
-            try {
-              await _productService.approveProduct(product.id);
-              await _loadProducts();
-              _showSuccessSnackbar('Product approval status updated');
-            } catch (e) {
-              _showErrorSnackbar('Failed to update status: ${e.toString()}');
-            }
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.edit, color: Colors.blue),
-          onPressed: () => _editProduct(product),
-        ),
-        IconButton(
-          icon: const Icon(Icons.delete, color: Colors.red),
-          onPressed: () async {
-            if (await _confirmDeleteDialog()) {
-              try {
-                await _productService.deleteProduct(product.id);
-                await _loadProducts();
-                _showSuccessSnackbar('Product deleted successfully');
-              } catch (e) {
-                _showErrorSnackbar('Failed to delete: ${e.toString()}');
-              }
-            }
-          },
-        ),
-      ],
-    );
-  }
-// In your _SystemAdminDashboardState class:
-
-// Add this method to build the category dropdown
-Widget _buildCategoryDropdown() {
-  // Ensure we have categories to show
-  if (_categories.isEmpty) {
-    return const Text('No categories available');
-  }
-
-  return DropdownButtonFormField<String>(
-    value: selectedCategoryId ?? _categories.first.id,
-    onChanged: (String? newValue) {
-      setState(() {
-        selectedCategoryId = newValue;
-      });
-    },
-    items: _categories.map<DropdownMenuItem<String>>((Category category) {
-      return DropdownMenuItem<String>(
-        value: category.id,
-        child: Text(category.name),
-      );
-    }).toList(),
-    decoration: const InputDecoration(
-      labelText: 'Category',
-      border: OutlineInputBorder(),
-    ),
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Please select a category';
-      }
-      return null;
-    },
-  );
-}
-
-// Update your _buildFormFields to use the new dropdown
- 
-  Widget _buildFormFields() {
-    return Column(
-      children: [
-        TextFormField(
-          controller: _nameController,
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            border: OutlineInputBorder(),
-          ),
-          validator: (value) => value!.isEmpty ? 'Required' : null,
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _priceController,
-          decoration: const InputDecoration(
-            labelText: 'Price',
-            border: OutlineInputBorder(),
-            prefixText: '\$ ',
-          ),
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          validator: (value) {
-            if (value!.isEmpty) return 'Required';
-            if (double.tryParse(value) == null) return 'Invalid number';
-            if (double.parse(value) <= 0) return 'Must be greater than 0';
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
-         _buildCategoryDropdown(),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _quantityController,
-          decoration: const InputDecoration(
-            labelText: 'Quantity',
-            border: OutlineInputBorder(),
-          ),
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            if (value!.isEmpty) return 'Required';
-            if (int.tryParse(value) == null) return 'Invalid number';
-            if (int.parse(value) < 0) return 'Cannot be negative';
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _ratingController,
-          decoration: const InputDecoration(
-            labelText: 'Rating',
-            border: OutlineInputBorder(),
-          ),
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          validator: (value) {
-            if (value!.isEmpty) return 'Required';
-            if (double.tryParse(value) == null) return 'Invalid number';
-            final rating = double.parse(value);
-            if (rating < 0 || rating > 5) return 'Must be between 0 and 5';
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
-        _buildImagePicker(),
-        if (_isUploading) ...[
-          const SizedBox(height: 16),
-          LinearProgressIndicator(
-            value: _uploadProgress,
-            backgroundColor: Colors.grey[200],
-            valueColor: AlwaysStoppedAnimation<Color>(colors),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Uploading: ${(_uploadProgress * 100).toStringAsFixed(0)}%',
-            style: const TextStyle(fontSize: 12),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildImagePicker() {
+  Widget _buildProductInfo(Product product, String categoryName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Product Image', style: TextStyle(fontSize: 16)),
-        const SizedBox(height: 8),
+        Text(
+          categoryName,
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          '\$${product.unitPrice.toStringAsFixed(2)}',
+          style: TextStyle(
+            color: colors,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(height: 2),
         Row(
           children: [
-            ElevatedButton.icon(
-              onPressed: _pickImage,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: product.quantity > 0 ? Colors.blue[50] : Colors.red[50],
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                product.quantity > 0 ? 'Stock: ${product.quantity}' : 'Out of Stock',
+                style: TextStyle(
+                  color: product.quantity > 0 ? Colors.blue : Colors.red,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              icon: const Icon(Icons.image, color: Colors.white),
-              label: const Text('Pick Image',
-                  style: TextStyle(color: Colors.white)),
             ),
-            const SizedBox(width: 16),
-            if (_imageFile != null)
-              Expanded(
-                child: Text(
-                  _imageFile!.path.split('/').last,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )
-            else if (_editingProduct?.imageUrl.isNotEmpty ?? false)
-              const Expanded(
-                child: Text("Current image will be used"),
+            if (product.rating > 0) ...[
+              const SizedBox(width: 8),
+              Row(
+                children: [
+                  Icon(Icons.star, color: Colors.amber[600], size: 14),
+                  Text(
+                    ' ${product.rating.toStringAsFixed(1)}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
               ),
+            ],
           ],
         ),
       ],
     );
+  }
+
+  Widget _buildProductImage(Product product) {
+    return Hero(
+      tag: 'product_${product.id}',
+      child: Container(
+        width: _imageSize,
+        height: _imageSize,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: product.imageUrl.isNotEmpty
+              ? Image.network(
+                  product.imageUrl,
+                  width: _imageSize,
+                  height: _imageSize,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.grey[100],
+                      child: const Center(
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[100],
+                    child: Icon(Icons.broken_image, color: Colors.grey[400]),
+                  ),
+                )
+              : Container(
+                  color: Colors.grey[100],
+                  child: Icon(Icons.image, color: Colors.grey[400]),
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(Product product) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: product.isApproved ? Colors.green[50] : Colors.orange[50],
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: IconButton(
+            icon: Icon(
+              product.isApproved ? Icons.check_circle : Icons.pending,
+              color: product.isApproved ? Colors.green : Colors.orange,
+              size: 20,
+            ),
+            onPressed: () => _toggleProductApproval(product),
+            tooltip: product.isApproved ? 'Approved' : 'Pending Approval',
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.delete, color: Colors.red[400], size: 20),
+          onPressed: () => _deleteProduct(product),
+          tooltip: 'Delete Product',
+        ),
+      ],
+    );
+  }
+
+  Future<void> _toggleProductApproval(Product product) async {
+    try {
+      await _productService.approveProduct(product.id);
+      await _loadProducts();
+      _showSuccessSnackbar('Product approval status updated');
+    } catch (e) {
+      _showErrorSnackbar('Failed to update approval status');
+      _logger.e('Error updating approval status: $e');
+    }
+  }
+
+  Future<void> _deleteProduct(Product product) async {
+    if (await _confirmDeleteDialog()) {
+      try {
+        await _productService.deleteProduct(product);
+        await _loadProducts();
+        _showSuccessSnackbar('Product deleted successfully');
+      } catch (e) {
+        _showErrorSnackbar('Failed to delete product');
+        _logger.e('Error deleting product: $e');
+      }
+    }
   }
 
   void _openFormModal() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-          left: 16,
-          right: 16,
-          top: 24,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        height: MediaQuery.of(context).size.height * 0.9,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  _editingProduct == null ? 'Add Product' : 'Edit Product',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                _buildFormFields(),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: _isUploading
-                          ? null
-                          : () {
-                              _resetForm();
-                              Navigator.pop(context);
-                            },
-                      child: const Text('Cancel'),
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton(
-
-                      onPressed:(){
-                        _isUploading ? null : _submitForm;
-                        Navigator.pop(context);
-                      } ,
-                      
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colors,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
-                      ),
-                      child: _isUploading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(
-                              _editingProduct == null
-                                  ? 'Add Product'
-                                  : 'Update Product',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+        child: ProductFormModal(
+          formKey: _formKey,
+          nameController: _nameController,
+          priceController: _priceController,
+          quantityController: _quantityController,
+          ratingController: _ratingController,
+          categories: _categories,
+          selectedCategoryId: selectedCategoryId,
+          onCategoryChanged: (val) => setState(() => selectedCategoryId = val),
+          imageFile: _imageFile,
+          onPickImage: _pickImage,
+          isUploading: _isUploading,
+          uploadProgress: _uploadProgress,
+          onCancel: () {
+            _resetForm();
+            Navigator.pop(context);
+          },
+          onSubmit: _submitForm,
+          isEdit: _editingProduct != null,
+          currentImageName: _editingProduct?.imageUrl.isNotEmpty ?? false
+              ? "Current image will be used"
+              : null,
         ),
       ),
     );
@@ -620,46 +764,118 @@ Widget _buildCategoryDropdown() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: colors,
-        title: const Text('Product Dashboard',
-            style: TextStyle(color: Colors.white)),
+        foregroundColor: Colors.white,
+        title: const Text(
+          'Product Dashboard',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
+            icon: const Icon(Icons.refresh),
             onPressed: _loadInitialData,
+            tooltip: 'Refresh',
           ),
         ],
+        elevation: 0,
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           _resetForm();
           _openFormModal();
         },
         backgroundColor: colors,
-        child: const Icon(Icons.add, color: Colors.white),
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add),
+        label: const Text('Add Product'),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Loading products...'),
+                ],
+              ),
+            )
           : _errorMessage != null
-              ? Center(child: Text(_errorMessage!))
-              : _products.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No products available',
-                        style: TextStyle(fontSize: 18),
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 64,
+                        color: Colors.red[300],
                       ),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: _loadInitialData,
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _products.length,
-                        itemBuilder: (context, index) =>
-                            _buildProductCard(_products[index]),
+                      const SizedBox(height: 16),
+                      Text(
+                        _errorMessage!,
+                        style: TextStyle(
+                          color: Colors.red[400],
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _loadInitialData,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                )
+              : FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Column(
+                    children: [
+                      _buildSearchBar(),
+                      _buildStatsCard(),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: _filteredProducts.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      _searchQuery.isNotEmpty
+                                          ? Icons.search_off
+                                          : Icons.inventory_2_outlined,
+                                      size: 64,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      _searchQuery.isNotEmpty
+                                          ? 'No products found for "$_searchQuery"'
+                                          : 'No products available',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : RefreshIndicator(
+                                onRefresh: _loadInitialData,
+                                color: colors,
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 80),
+                                  itemCount: _filteredProducts.length,
+                                  itemBuilder: (context, index) =>
+                                      _buildProductCard(_filteredProducts[index]),
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
     );
   }
 }

@@ -10,99 +10,96 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final fullnameController = TextEditingController();
+    final fullnameController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-    
+
     return Scaffold(
-      
       body: Padding(
-      
         padding: const EdgeInsets.all(25.0),
         child: Column(
-          
-
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.shopping_cart,
-                color: colors,
-                size: 40,),
+                Icon(
+                  Icons.shopping_cart,
+                  color: colors,
+                  size: 40,
+                ),
                 const SizedBox(width: 20),
                 const Text(
                   "Create Account",
                   style: TextStyle(fontSize: 25),
-                  
                 ),
               ],
             ),
 
-            
             const SizedBox(height: 30),
-            
+
             Center(
-              
-              
-              child: MyTextField(controller: fullnameController, hintText: 'fullname', obsecureText: false, validator: (String? value) {
-                return null;
-                }, obscureText: false, ),
+              child: MyTextField(
+                controller: fullnameController,
+                hintText: 'fullname',
+                validator: (String? value) {
+                  return null;
+                },
               ),
+            ),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-
-              MyTextField(controller: emailController, hintText: "email", obsecureText: false, validator: (String? value) {
+            MyTextField(
+              controller: emailController,
+              hintText: "email",
+              validator: (String? value) {
                 return null;
-                }, obscureText: false, ),
-            
-              
-              const SizedBox(height: 20),
+              },
+            ),
 
-              MyTextField(controller: passwordController, hintText: "password", obsecureText: true, validator: (String? value) {
+            const SizedBox(height: 20),
+
+            MyTextField(
+              controller: passwordController,
+              hintText: "password",
+              validator: (String? value) {
                 return null;
-                }, obscureText: false, ),
+              },
+            ),
 
-              const SizedBox(height: 50),
-        
-              
-              //sign in button
-              AppBtn(lbl: "Sign Up", onPressed: ( ) {Navigator.push(context, MaterialPageRoute(builder: (context)=> const WelcomePage()));}, colorState: colors, textColorState: Colors.white,),
+            const SizedBox(height: 50),
 
-             const SizedBox(height: 50),
+            //sign in button
+            AppBtn(
+              lbl: "Sign Up",
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WelcomePage()));
+              },
+              colorState: colors,
+              textColorState: Colors.white,
+            ),
 
-               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                 const Text(
-                    "By signing up you agree to our"
-                  ),
-                 const SizedBox(width: 2),
+            const SizedBox(height: 50),
 
-              Text(
-                "Terms and Conditions",
-                style: TextStyle(
-                  color: colors,
-                  decoration: TextDecoration.underline
-                 ),
-               )
-                ],
-              ),
-              
-              
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text("By signing up you agree to our"),
+                const SizedBox(width: 2),
+                Text(
+                  "Terms and Conditions",
+                  style: TextStyle(
+                      color: colors, decoration: TextDecoration.underline),
+                )
+              ],
+            ),
           ],
-        
-          
-          
         ),
       ),
-
-    
-
-        
     );
   }
 }

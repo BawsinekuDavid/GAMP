@@ -43,35 +43,35 @@ class ProfilesPage extends StatelessWidget {
            MyTextField(
               controller: nameController,
               hintText: "name",
-              obsecureText: false , validator: (String? value) {
+           validator: (String? value) {
                 return null;
-                }, obscureText: false
+                },  
             ),
             const SizedBox(height: 50),
             MyTextField(
               controller: emailController,
               hintText: "email",
-              obsecureText: false,
+          
                validator: (String? value) {
                  return null;
-                 }, obscureText: false
+                 }, 
             ),
             const SizedBox(height: 50),
             MyTextField(
               controller: phoneController,
               hintText: "phone number",
-              obsecureText: false, validator: (String? value) {
+             validator: (String? value) {
                 return null;
-                }, obscureText: false,
+                }, 
             ),
             const SizedBox(height: 50),
             MyTextField(
               controller: paymentModeController,
               hintText: "mode",
-              obsecureText: false,
+           
                validator: (String? value) {
                  return null;
-                 }, obscureText: false
+                 }, 
             ),
             const SizedBox(height: 30),
             Row(

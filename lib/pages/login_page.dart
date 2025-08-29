@@ -119,8 +119,7 @@ try {
                 MyTextField(
                   controller: _emailController,
                   hintText: "Email",
-                  obscureText: false,
-                  validator: _validateEmail, obsecureText: false,
+                  validator: _validateEmail,  
                 ),
                 const SizedBox(height: 20),
 

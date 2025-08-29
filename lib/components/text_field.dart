@@ -4,15 +4,15 @@ import 'package:gmarket_app/constant.dart';
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final bool obsecureText;
+  
 
   const MyTextField({
     super.key,
     required this.controller,
     required this.hintText,
-    required this.obsecureText,
+ 
     required String? Function(String? value) validator,
-    required bool obscureText,  
+      
   });
 
   @override

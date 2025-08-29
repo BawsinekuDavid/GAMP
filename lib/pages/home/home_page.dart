@@ -4,6 +4,8 @@ import 'package:gmarket_app/ADMIN/system_admin_dashboard.dart';
 import 'package:gmarket_app/Endpoints/vendors_api.dart';
 import 'package:gmarket_app/components/text_field.dart';
 import 'package:gmarket_app/constant.dart';
+import '../../models/category_module.dart';
+import '../../models/products_module.dart';
 import '../../models/vendors_module.dart';
 import 'grid.dart';
 import '../Vendors/venor_card.dart';
@@ -18,10 +20,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   
   late TabController _tabController;
+ final List<Category> _categories = [];
+   final List<Product> _products = [];
+  List<Product> _filteredProducts = [];
   final List<String> _tabs = ['All', 'Fruits', 'Vegetables', 'Meat & Fish'];
   late Future<List<Vendor>> _futureVendors;
   final VendorsApi _vendorsApi = VendorsApi();
-
+    final _searchController = TextEditingController();
+    String _searchQuery = '';
   @override
   void initState() {
     super.initState();
@@ -33,6 +39,29 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+   void _filterProducts(String query) {
+    setState(() {
+      _searchQuery = query;
+      if (query.isEmpty) {
+        _filteredProducts = _products;
+      } else {
+        _filteredProducts = _products.where((product) {
+          return product.product.toLowerCase().contains(query.toLowerCase()) ||
+              _getCategoryName(product.category).toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      }
+    });
+  }
+
+    String _getCategoryName(String categoryId) {
+    return _categories
+        .firstWhere(
+          (category) => category.id == categoryId,
+          orElse: () => Category(id: categoryId, name: 'Unknown'),
+        )
+        .name;
   }
 
   @override
